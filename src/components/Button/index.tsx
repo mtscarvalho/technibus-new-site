@@ -1,43 +1,48 @@
 import { Slot } from "@radix-ui/react-slot";
-import React from "react";
-import { tv, VariantProps } from "tailwind-variants";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
-const buttonVariants = tv({
-  base: "inline-flex gap-2 items-center justify-center transition-colors duration-300 cursor-pointer rounded-md text-sm disabled:pointer-events-none",
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva("inline-flex cursor-pointer items-center justify-center gap-2 text-sm transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0", {
   variants: {
-    size: {
-      md: "px-6 py-3 min-h-[38px]",
-      sm: "py-2 px-3 min-h-[30px]",
-      icon: "p-4",
-    },
-    width: {
-      full: "w-full max-w-full justify-start text-left",
-    },
     variant: {
       primary: "bg-brand-primary text-on-brand-primary hover:bg-brand-primary-hover disabled:bg-disabled disabled:text-on-disabled",
-      secondary: "bg-brand-secondary text-on-brand-secondary hover:bg-brand-secondary-hover disabled:bg-disabled disabled:text-on-disabled",
-      outline: " border-primary border text-primary hover:bg-secondary disabled:bg-disabled disabled:border-disabled disabled:border disabled:text-on-disabled",
-      subtle: "hover:bg-secondary hover:text-secondary disabled:text-on-disabled",
+      // destructive: "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+      outline: "",
+      // secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      ghost: "hover:text-on-brand-tertiary hover:bg-brand-tertiary-hover",
+      subtle: "text-brand-primary hover:text-on-brand-tertiary",
+      // link: "text-primary underline-offset-4 hover:underline",
+    },
+    size: {
+      default: "h-9 px-4 py-2 rounded-lg has-[>svg]:px-3",
+      sm: "h-8 rounded-lg gap-1.5 px-3 has-[>svg]:px-2.5",
+      lg: "h-11 rounded-lg px-4 has-[>svg]:px-4",
+      icon: "size-9 rounded-lg",
+      "icon-sm": "size-8",
+      "icon-lg": "size-10",
     },
   },
   defaultVariants: {
     variant: "primary",
-    size: "md",
+    size: "default",
   },
 });
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
-  };
-
-function Button({ className, variant, width, size, asChild = false, ...props }: ButtonProps, ref: React.Ref<HTMLButtonElement>) {
-  const classes = buttonVariants({ size, variant, width, className });
+  }) {
   const Comp = asChild ? Slot : "button";
 
-  return <Comp className={classes} ref={ref} {...props} />;
+  return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
 }
 
-const ForwardedButton = React.forwardRef(Button);
-
-export { ForwardedButton as Button };
+export { Button, buttonVariants };

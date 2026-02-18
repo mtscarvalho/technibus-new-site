@@ -1,35 +1,38 @@
 "use client";
 
-import Link from "next/link";
 import { RefObject, useEffect, useRef, useState } from "react";
+
+import Image from "next/image";
+import Link from "next/link";
+
+import { MenuIcon, X } from "lucide-react";
 
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { Button } from "../Button";
 
-import { Menu as MenuIcon, X } from "lucide-react";
+const MENU_ITEMS = [
+  { label: "Lat.bus", url: "/" },
+  { label: "Empresas & Negócios", url: "/" },
+  { label: "Indústria", url: "/" },
+  { label: "Entrevista & Opinião", url: "/" },
+  { label: "Mobilidade", url: "/" },
+  { label: "Revistas", url: "/" },
+  { label: "Estúdio TB", url: "/" },
+  { label: "Metroferroviário", url: "/" },
+  { label: "Rodoviário", url: "/" },
+  { label: "Sustentabilidade", url: "/" },
+  { label: "Tecnologia", url: "/" },
+];
 
-import { Button } from "@/components/Button";
-import { Dropdown, DropdownContent, DropdownTrigger } from "@/components/Dropdown";
-
-import { Menu as PayloadMenu } from "@/payload-types";
-
-type HeaderProps = {
-  menu: PayloadMenu;
-};
-
-export function Menu({ menu }: HeaderProps) {
+export function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  function openButton() {
-    setIsOpen(!isOpen);
-  }
+  const toggleOpen = () => setIsOpen((v) => !v);
 
   useFocusTrap(menuRef as RefObject<HTMLElement>, isOpen);
-
-  useEscapeKey(() => {
-    setIsOpen(false);
-  });
+  useEscapeKey(() => setIsOpen(false));
 
   useEffect(() => {
     if (isOpen) {
@@ -43,68 +46,70 @@ export function Menu({ menu }: HeaderProps) {
   }, [isOpen]);
 
   return (
-    <div className={`py-4 ${isOpen ? "h-svh" : "h-auto"}`} ref={menuRef}>
-      <div className="container">
-        <div className="flex flex-wrap items-center justify-between">
-          <Link href="/">
-            <div className="text-2xl font-bold">Boilerplate</div>
+    <div className={`left-0 z-10 w-full backdrop-blur-xl ${isOpen ? "bg-woodsmoke h-svh" : "h-auto"}`} ref={menuRef}>
+      <div className="container h-full max-lg:py-4">
+        <div className="border-secondary hidden grid-cols-3 items-center border-b px-4 py-6 lg:grid">
+          <div className="flex flex-col">
+            <p className="font-semibold">Acervo digital</p>
+            <p className="text-secondary">Mais de 60 anos de tradição</p>
+          </div>
+          <Link className="block rounded" href="/">
+            <Image className="mx- h-14" src="/logo.svg" width={377} height={190} alt="OTM Editora" />
             <span className="sr-only">Página inicial</span>
           </Link>
+          {/* <div className="flex justify-end">
+            <ModeToggle />
+          </div> */}
+        </div>
+
+        <div className="flex w-full items-center justify-between max-lg:flex-wrap">
+          <div className="flex items-center justify-start gap-4 lg:hidden">
+            <Link className="block rounded" href="/">
+              <Image src="/logo.svg" width={65} height={40} alt="OTM Editora" />
+              <span className="sr-only">Página inicial</span>
+            </Link>
+            <div className="border-secondary items-start">
+              <p className="font-semibold">Acervo digital</p>
+              <p className="text-secondary">Mais de 60 anos de tradição</p>
+            </div>
+          </div>
+
+          {/* Mobile toggle */}
           <div className="flex items-center justify-center lg:hidden">
-            <Button variant="subtle" size="icon" onClick={openButton}>
-              {isOpen ? <X /> : <MenuIcon />}
+            <Button variant="ghost" size="icon" onClick={toggleOpen} aria-expanded={isOpen} aria-controls="main-navigation" aria-label={isOpen ? "Fechar menu" : "Abrir menu"}>
+              {isOpen ? <X className="size-5" /> : <MenuIcon className="size-5" />}
             </Button>
           </div>
-          <nav className={`basis-full lg:basis-auto lg:py-0 ${isOpen ? "py-10" : ""}`}>
-            <ul className={`items-center text-sm lg:flex ${isOpen ? "block" : "hidden"}`}>
-              {menu.menu.map((item) => (
-                <li key={item.id} className="mb-2 lg:mb-0">
-                  {item.type == "submenu" ? (
-                    <SubmenuItem
-                      title={item.label!}
-                      items={item.submenu!.map((sub) => ({
-                        title: sub.label,
-                        link: sub.link,
-                      }))}
-                    />
-                  ) : (
-                    <MenuItem title={item.label!} link={item.link!} />
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
+
+          <div className="flex items-center gap-4 max-lg:basis-full max-lg:flex-wrap">
+            <nav id="main-navigation" className={`basis-full items-center lg:basis-auto lg:py-0 ${isOpen ? "pt-10" : ""}`}>
+              {/* Desktop Menu */}
+              <ul className="hidden justify-center py-2 lg:flex lg:flex-wrap lg:items-center">
+                {MENU_ITEMS.map((item) => (
+                  <li key={item.label} className="mb-2 lg:mb-0">
+                    <Button className="max-lg:w-full max-lg:justify-start" size="lg" variant="ghost" asChild>
+                      <Link href={item.url}>{item.label}</Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Mobile Menu */}
+              <ul className={`-ml-3 lg:hidden ${isOpen ? "block" : "hidden"}`}>
+                {MENU_ITEMS.map((item) => (
+                  <li key={item.label} className="">
+                    <Button className="max-lg:w-full max-lg:justify-start" size="lg" variant="ghost" asChild>
+                      <Link href={item.url} onClick={() => setIsOpen(false)}>
+                        {item.label}
+                      </Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function MenuItem({ title, link, external }: { title: string; link: string; external?: boolean }) {
-  return (
-    <Button size="sm" variant="subtle" asChild>
-      <Link href={link} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
-        {title}
-      </Link>
-    </Button>
-  );
-}
-
-function SubmenuItem({ title, items }: { title: string; items: Array<{ title: string; link: string }> }) {
-  return (
-    <Dropdown>
-      <Button variant="subtle" size="sm" asChild>
-        <DropdownTrigger>{title}</DropdownTrigger>
-      </Button>
-      <DropdownContent className="max-lg:relative">
-        <ul>
-          {items.map((item) => (
-            <li key={item.title}>
-              <MenuItem {...item} />
-            </li>
-          ))}
-        </ul>
-      </DropdownContent>
-    </Dropdown>
   );
 }
