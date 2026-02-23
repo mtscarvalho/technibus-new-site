@@ -1,6 +1,7 @@
 import { createMetadata } from "@/utilities/create-metadata";
 
 import { Card } from "@/components/Card";
+import MostRead from "@/components/MostRead";
 
 export function generateMetadata() {
   return createMetadata({
@@ -13,7 +14,7 @@ export function generateMetadata() {
 export default function Page() {
   return (
     <main>
-      <section className="pt-10 pb-24">
+      <section className="relative z-0 pt-10 pb-24">
         <div className="container grid grid-cols-12 gap-10">
           <div className="col-span-9">
             <h2 className="text-primary border-secondary mb-8 border-b pb-3 text-2xl font-medium">Destaques</h2>
@@ -76,27 +77,14 @@ export default function Page() {
               <Card url="/post/volvo" category="Transporte" title="Volvo anuncia novo ciclo bilionário de investimentos e reforça estratégia em ônibus" size="sm" />
             </div>
           </div>
-          <div className="col-span-3 space-y-8">
-            <h2 className="text-primary border-secondary mb-8 border-b pb-3 text-2xl font-medium">Mais lidos</h2>
-            <ol className="space-y-2">
-              <li>
-                <Card category="Transporte" url="/post/volvo" title="Volvo anuncia novo ciclo bilionário de investimentos e reforça estratégia em ônibus" size="sm" />
-              </li>
-              <li>
-                <Card category="Transporte" url="/post/volvo" title="Volvo anuncia novo ciclo bilionário de investimentos e reforça estratégia em ônibus" size="sm" />
-              </li>
-              <li>
-                <Card category="Transporte" url="/post/volvo" title="Volvo anuncia novo ciclo bilionário de investimentos e reforça estratégia em ônibus" size="sm" />
-              </li>
-              <li>
-                <Card category="Transporte" url="/post/volvo" title="Volvo anuncia novo ciclo bilionário de investimentos e reforça estratégia em ônibus" size="sm" />
-              </li>
-              <li>
-                <Card category="Transporte" url="/post/volvo" title="Volvo anuncia novo ciclo bilionário de investimentos e reforça estratégia em ônibus" size="sm" />
-              </li>
-            </ol>
+          <div className="col-span-3">
+            <MostRead />
           </div>
         </div>
+      </section>
+
+      <section className="bg-primary py-24">
+        <div className="container"></div>
       </section>
     </main>
   );

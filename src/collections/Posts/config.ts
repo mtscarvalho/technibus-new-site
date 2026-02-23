@@ -46,6 +46,12 @@ export const Posts: CollectionConfig = {
               required: true,
             },
             {
+              name: "excerpt",
+              label: "Resumo",
+              type: "text",
+              required: true,
+            },
+            {
               name: "image",
               label: "Imagem",
               type: "upload",

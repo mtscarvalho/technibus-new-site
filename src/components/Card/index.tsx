@@ -9,8 +9,8 @@ const card = tv({
   slots: {
     root: "group block space-y-3 rounded-lg p-3 transition-all duration-300 hover:bg-primary hover:shadow-lg",
     image: "mb-4 rounded",
-    meta: "text-secondary text-xs tracking-wider uppercase",
-    title: "text-brand-primary font-semibold text-balance",
+    meta: "text-regal-blue-950 text-xs tracking-wider uppercase",
+    title: "text-brand-primary font-medium text-balance",
     description: "text-secondary text-sm",
   },
   variants: {

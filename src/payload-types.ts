@@ -153,6 +153,7 @@ export interface Post {
   slug?: string | null;
   relPermalink: string;
   title: string;
+  excerpt: string;
   image?: (number | null) | Media;
   publishedDate: string;
   content: {
@@ -329,6 +330,7 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   relPermalink?: T;
   title?: T;
+  excerpt?: T;
   image?: T;
   publishedDate?: T;
   content?: T;

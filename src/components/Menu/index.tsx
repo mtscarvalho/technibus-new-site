@@ -12,16 +12,15 @@ import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { Button } from "../Button";
 
 const MENU_ITEMS = [
-  { label: "Lat.bus", url: "/" },
   { label: "Empresas & Negócios", url: "/" },
-  { label: "Indústria", url: "/" },
   { label: "Entrevista & Opinião", url: "/" },
-  { label: "Mobilidade", url: "/" },
-  { label: "Revistas", url: "/" },
-  { label: "Estúdio TB", url: "/" },
+  { label: "Indústria", url: "/" },
+  { label: "Lat.bus", url: "/" },
   { label: "Metroferroviário", url: "/" },
+  { label: "Mobilidade", url: "/" },
   { label: "Rodoviário", url: "/" },
   { label: "Sustentabilidade", url: "/" },
+  { label: "Technibus na história", url: "/" },
   { label: "Tecnologia", url: "/" },
 ];
 
