@@ -19,6 +19,10 @@ export const Media: CollectionConfig = {
       type: "text",
     },
     {
+      name: "caption",
+      type: "text",
+    },
+    {
       name: "blurhash",
       type: "text",
       admin: {

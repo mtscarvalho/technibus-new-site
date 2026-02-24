@@ -9,7 +9,8 @@
     "lint": "next lint",
     "payload:generate": "payload generate:importmap && payload generate:importmap",
     "payload:generate-types": "payload generate:types",
-    "payload:generate-importmap": "payload generate:importmap"
+    "payload:generate-importmap": "payload generate:importmap",
+    "import:wp": "tsx scripts/import-wp-10-posts.ts"
   },
   "type": "module",
   "dependencies": {
@@ -23,11 +24,14 @@
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
     "graphql": "^16.12.0",
+    "jsdom": "^28.1.0",
     "lucide-react": "^0.574.0",
     "next": "^16.1.6",
     "nextjs-toploader": "^3.9.17",
     "ogl": "^1.0.11",
+    "p-limit": "^7.3.0",
     "payload": "^3.76.1",
     "plaiceholder": "^3.0.0",
     "prettier": "^3.8.1",

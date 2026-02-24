@@ -70,18 +70,22 @@ export interface Config {
     users: User;
     posts: Post;
     media: Media;
-    faq: Faq;
+    categories: Category;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    categories: {
+      posts: 'posts';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    faq: FaqSelect<false> | FaqSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -91,16 +95,8 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {
-    menu: Menu;
-    social: Social;
-    privacyPolicy: PrivacyPolicy;
-  };
-  globalsSelect: {
-    menu: MenuSelect<false> | MenuSelect<true>;
-    social: SocialSelect<false> | SocialSelect<true>;
-    privacyPolicy: PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
-  };
+  globals: {};
+  globalsSelect: {};
   locale: null;
   user: User;
   jobs: {
@@ -132,6 +128,9 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  name?: string | null;
+  role?: string | null;
+  bio?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -152,8 +151,10 @@ export interface Post {
   id: number;
   slug?: string | null;
   relPermalink: string;
+  author?: (number | null) | User;
   title: string;
   excerpt: string;
+  category: (number | Category)[];
   image?: (number | null) | Media;
   publishedDate: string;
   content: {
@@ -171,9 +172,23 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  meta: {
-    title: string;
-    description: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  slug?: string | null;
+  title: string;
+  description?: string | null;
+  posts?: {
+    docs?: (number | Post)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
   };
   updatedAt: string;
   createdAt: string;
@@ -186,6 +201,7 @@ export interface Post {
 export interface Media {
   id: number;
   alt?: string | null;
+  caption?: string | null;
   blurhash?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -198,32 +214,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faq".
- */
-export interface Faq {
-  id: number;
-  title: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -262,8 +252,8 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'faq';
-        value: number | Faq;
+        relationTo: 'categories';
+        value: number | Category;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -312,6 +302,9 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  bio?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -329,17 +322,13 @@ export interface UsersSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   relPermalink?: T;
+  author?: T;
   title?: T;
   excerpt?: T;
+  category?: T;
   image?: T;
   publishedDate?: T;
   content?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -350,6 +339,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
   blurhash?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -365,11 +355,13 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faq_select".
+ * via the `definition` "categories_select".
  */
-export interface FaqSelect<T extends boolean = true> {
+export interface CategoriesSelect<T extends boolean = true> {
+  slug?: T;
   title?: T;
-  content?: T;
+  description?: T;
+  posts?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -413,198 +405,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "menu".
- */
-export interface Menu {
-  id: number;
-  menu: {
-    type?: ('link' | 'submenu') | null;
-    label?: string | null;
-    link?: string | null;
-    submenu?:
-      | {
-          label: string;
-          link: string;
-          id?: string | null;
-        }[]
-      | null;
-    id?: string | null;
-  }[];
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "social".
- */
-export interface Social {
-  id: number;
-  instagram: {
-    title: string;
-    url?: string | null;
-  };
-  facebook: {
-    title: string;
-    url?: string | null;
-  };
-  whatsapp: {
-    title: string;
-    url?: string | null;
-  };
-  youtube: {
-    title: string;
-    url?: string | null;
-  };
-  linkedin: {
-    title: string;
-    url?: string | null;
-  };
-  threads: {
-    title: string;
-    url?: string | null;
-  };
-  tiktok: {
-    title: string;
-    url?: string | null;
-  };
-  x: {
-    title: string;
-    url?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "privacyPolicy".
- */
-export interface PrivacyPolicy {
-  id: number;
-  title: string;
-  description: string;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  meta: {
-    title: string;
-    description: string;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "menu_select".
- */
-export interface MenuSelect<T extends boolean = true> {
-  menu?:
-    | T
-    | {
-        type?: T;
-        label?: T;
-        link?: T;
-        submenu?:
-          | T
-          | {
-              label?: T;
-              link?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "social_select".
- */
-export interface SocialSelect<T extends boolean = true> {
-  instagram?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  facebook?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  whatsapp?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  youtube?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  linkedin?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  threads?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  tiktok?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  x?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "privacyPolicy_select".
- */
-export interface PrivacyPolicySelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  content?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

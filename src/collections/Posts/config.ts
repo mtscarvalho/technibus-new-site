@@ -1,6 +1,3 @@
-import { revalidatePath } from "next/cache";
-
-import { MetaDescriptionField, MetaTitleField, PreviewField } from "@payloadcms/plugin-seo/fields";
 import type { CollectionConfig } from "payload";
 
 import { relPermalinkField } from "@/fields/relpermalink";
@@ -15,21 +12,22 @@ export const Posts: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     group: "Conteúdo",
+    preview: ({ relPermalink }) => `${relPermalink}`,
   },
   versions: {
     drafts: {
       autosave: true,
     },
   },
-  hooks: {
-    afterChange: [
-      ({ operation }) => {
-        if (operation === "update") {
-          revalidatePath("/", "layout");
-        }
-      },
-    ],
-  },
+  //   hooks: {
+  //     afterChange: [
+  //       ({ operation }) => {
+  //         if (operation === "update") {
+  //           revalidatePath("/", "layout");
+  //         }
+  //       },
+  //     ],
+  //   },
   fields: [
     slugField(),
     relPermalinkField("/blog"),
@@ -39,6 +37,12 @@ export const Posts: CollectionConfig = {
         {
           label: "Conteúdo",
           fields: [
+            {
+              name: "author",
+              label: "Autor",
+              type: "relationship",
+              relationTo: "users",
+            },
             {
               name: "title",
               label: "Título",
@@ -50,6 +54,14 @@ export const Posts: CollectionConfig = {
               label: "Resumo",
               type: "text",
               required: true,
+            },
+            {
+              name: "category",
+              label: "Categoria",
+              type: "relationship",
+              relationTo: "categories",
+              required: true,
+              hasMany: true,
             },
             {
               name: "image",
@@ -76,32 +88,6 @@ export const Posts: CollectionConfig = {
               type: "richText",
               required: true,
             },
-          ],
-        },
-        {
-          label: "SEO",
-          name: "meta",
-          fields: [
-            MetaTitleField({
-              hasGenerateFn: true,
-              overrides: {
-                label: "Título",
-                required: true,
-              },
-            }),
-            MetaDescriptionField({
-              hasGenerateFn: true,
-              overrides: {
-                label: "Meta descrição",
-                required: true,
-              },
-            }),
-            PreviewField({
-              hasGenerateFn: true,
-              overrides: {
-                label: "Pré-visualização",
-              },
-            }),
           ],
         },
       ],

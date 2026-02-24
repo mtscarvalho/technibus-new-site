@@ -11,5 +11,21 @@ export const Users: CollectionConfig = {
     group: "Globais",
   },
   auth: { useSessions: false },
-  fields: [],
+  fields: [
+    {
+      name: "name",
+      type: "text",
+      label: "Nome",
+    },
+    {
+      type: "text",
+      label: "Cargo",
+      name: "role",
+    },
+    {
+      type: "textarea",
+      label: "Bioagrafia",
+      name: "bio",
+    },
+  ],
 };

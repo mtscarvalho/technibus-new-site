@@ -1,24 +1,23 @@
 import Link from "next/link";
 
-import { fetchSocials } from "@/globals/Social/data";
+// import { fetchSocials } from "@/globals/Social/data";
 import { getCurrentYear } from "@/utilities/get-current-year";
 
 import { Button } from "@/components/Button";
-import { Facebook, Instagram, LinkedIn, Threads, TikTok, WhatsApp, X, YouTube } from "@/components/SocialIcon";
 
 export async function Footer() {
-  const socialFetch = await fetchSocials();
+  //   const socialFetch = await fetchSocials();
 
-  const socials = [
-    { ...socialFetch.facebook, icon: Facebook },
-    { ...socialFetch.youtube, icon: YouTube },
-    { ...socialFetch.instagram, icon: Instagram },
-    { ...socialFetch.threads, icon: Threads },
-    { ...socialFetch.x, icon: X },
-    { ...socialFetch.linkedin, icon: LinkedIn },
-    { ...socialFetch.tiktok, icon: TikTok },
-    { ...socialFetch.whatsapp, icon: WhatsApp },
-  ];
+  //   const socials = [
+  //     { ...socialFetch.facebook, icon: Facebook },
+  //     { ...socialFetch.youtube, icon: YouTube },
+  //     { ...socialFetch.instagram, icon: Instagram },
+  //     { ...socialFetch.threads, icon: Threads },
+  //     { ...socialFetch.x, icon: X },
+  //     { ...socialFetch.linkedin, icon: LinkedIn },
+  //     { ...socialFetch.tiktok, icon: TikTok },
+  //     { ...socialFetch.whatsapp, icon: WhatsApp },
+  //   ];
 
   return (
     <footer className="bg-default text-primary py-12" data-theme="dark">
@@ -30,7 +29,7 @@ export async function Footer() {
             Todos os direitos reservados. <br />
             Site criado por Jogajunto
           </p>
-          {socials.length > 0 && (
+          {/* {socials.length > 0 && (
             <ul className="flex flex-wrap">
               {socials.map(
                 ({ url, title, icon: Icon }) =>
@@ -43,7 +42,7 @@ export async function Footer() {
                   ),
               )}
             </ul>
-          )}
+          )} */}
         </div>
         <div className="space-y-2">
           <h2 className="border-default text-primary-secondary border-b pb-3 font-semibold">Gotex Show</h2>

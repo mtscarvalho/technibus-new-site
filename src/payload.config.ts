@@ -3,7 +3,22 @@ import sharp from "sharp";
 import { fileURLToPath } from "url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
-import { BlockquoteFeature, BlocksFeature, BoldFeature, FixedToolbarFeature, HeadingFeature, ItalicFeature, lexicalEditor, LinkFeature, LinkFields, OrderedListFeature, ParagraphFeature, UnderlineFeature, UnorderedListFeature } from "@payloadcms/richtext-lexical";
+import {
+  BlockquoteFeature,
+  BlocksFeature,
+  BoldFeature,
+  FixedToolbarFeature,
+  HeadingFeature,
+  ItalicFeature,
+  lexicalEditor,
+  LinkFeature,
+  LinkFields,
+  OrderedListFeature,
+  ParagraphFeature,
+  UnderlineFeature,
+  UnorderedListFeature,
+  UploadFeature,
+} from "@payloadcms/richtext-lexical";
 import { buildConfig, TextFieldSingleValidation } from "payload";
 
 import { pt } from "@payloadcms/translations/languages/pt";
@@ -14,11 +29,7 @@ import { seoPlugin } from "@payloadcms/plugin-seo";
 import { Media } from "@/collections/Media/config";
 import { Posts } from "@/collections/Posts/config";
 import { Users } from "@/collections/Users/config";
-import { FAQ } from "./collections/FAQ/config";
-
-import { MainMenu } from "@/globals/MainMenu/config";
-import { Social } from "@/globals/Social/config";
-import { PrivacyPolicy } from "./globals/PrivacyPolicy/config";
+import { Categories } from "./collections/Categories";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -51,6 +62,7 @@ export default buildConfig({
   },
   editor: lexicalEditor({
     features: () => [
+      UploadFeature(),
       FixedToolbarFeature(),
       ParagraphFeature(),
       UnderlineFeature(),
@@ -93,8 +105,7 @@ export default buildConfig({
       }),
     ],
   }),
-  collections: [Users, Posts, Media, FAQ],
-  globals: [MainMenu, Social, PrivacyPolicy],
+  collections: [Users, Posts, Media, Categories],
   secret: process.env.PAYLOAD_SECRET || "",
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || "" },
