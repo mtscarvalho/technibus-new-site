@@ -23,12 +23,13 @@ import { buildConfig, TextFieldSingleValidation } from "payload";
 
 import { pt } from "@payloadcms/translations/languages/pt";
 
-import { YouTubeEmbedBlock } from "@/blocks/YoutubeEmbedBlock";
+import { YouTubeEmbedBlock } from "@/blocks/YoutubeEmbed";
 import { seoPlugin } from "@payloadcms/plugin-seo";
 
 import { Media } from "@/collections/Media/config";
 import { Posts } from "@/collections/Posts/config";
 import { Users } from "@/collections/Users/config";
+import { SpotifyEmbedBlock } from "./blocks/SpotifyEmbed";
 import { Categories } from "./collections/Categories";
 
 const filename = fileURLToPath(import.meta.url);
@@ -101,7 +102,7 @@ export default buildConfig({
         },
       }),
       BlocksFeature({
-        blocks: [YouTubeEmbedBlock],
+        blocks: [YouTubeEmbedBlock, SpotifyEmbedBlock],
       }),
     ],
   }),

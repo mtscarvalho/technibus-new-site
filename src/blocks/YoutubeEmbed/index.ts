@@ -12,7 +12,7 @@ export const YouTubeEmbedBlock: Block = {
       required: true,
       validate: (value: string | undefined | null) => {
         if (value && !isYouTubeUrl(value)) {
-          return "Invalid YouTube URL. Please provide a valid YouTube URL.";
+          return "O link informado não é um URL válido do YouTube. Verifique e tente novamente.";
         }
         return true;
       },

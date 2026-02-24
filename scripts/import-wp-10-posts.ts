@@ -10,22 +10,21 @@ import { getPayload } from "payload";
 import payloadConfig from "../src/payload.config"; // adjust if needed
 
 /**
- * ✅ Imports (10 posts) WordPress -> Payload (Local API)
+ * Imports (10 posts) WordPress -> Payload (Local API)
  *
  * Creates/updates:
- * - Users (authors) in `users` and relates post.author (Posts must have `author` relationship field)
- * - Categories in `categories` and relates post.category (hasMany)
- * - Media in `media`:
- *    - Featured image (robust resolution using _embedded AND featured_media ID fallback)
- *    - Body images (img/figure + lazy-load attrs + nested)
- * - Posts in `posts`:
- *    - slug from WP (and updates it even if WP slug changes later) using a local wpId->payloadId map file
- *    - title, excerpt, publishedDate, SEO meta required fields
- *    - content (Lexical JSON with paragraphs/headings/lists/bold/italic/links/upload nodes)
+ * - Users (authors) in `users` using the REAL WP email when available (requires `context=edit` + auth)
+ *   - Fallback: wp-<id>@import.local
+ * - Categories in `categories`
+ * - Media in `media` (featured + body)
+ * - Posts in `posts` (slug updates supported via map file)
  *
  * ENV:
  * - PAYLOAD_SECRET required
- * - WP_BASE optional (defaults below)
+ * - WP_BASE="https://example.com"
+ * - OPTIONAL (recommended to fetch WP user email):
+ *    WP_USERNAME, WP_PASSWORD  (Basic Auth plugin / Application Password)
+ *   OR WP_TOKEN (Bearer token)
  */
 
 const WP_BASE = process.env.WP_BASE || "https://YOUR-WP-SITE.com";
@@ -47,7 +46,7 @@ type WPPost = {
   content: { rendered: string };
   author: number;
   categories: number[];
-  featured_media?: number; // WP field
+  featured_media?: number;
   _embedded?: any;
 };
 
@@ -56,6 +55,7 @@ type WPUser = {
   name?: string;
   description?: string;
   slug?: string;
+  email?: string; // only available with context=edit + permissions
 };
 
 type WPCategory = {
@@ -137,8 +137,24 @@ function randomPassword(bytes = 32) {
   return crypto.randomBytes(bytes).toString("hex");
 }
 
+/** ------------------ WP AUTH (for users?context=edit to include email) ------------------ */
+
+function getWpAuthHeaders(): Record<string, string> {
+  const token = process.env.WP_TOKEN?.trim();
+  const username = process.env.WP_USERNAME?.trim();
+  const password = process.env.WP_PASSWORD?.trim();
+
+  if (token) return { Authorization: `Bearer ${token}` };
+  if (username && password) {
+    const basic = Buffer.from(`${username}:${password}`).toString("base64");
+    return { Authorization: `Basic ${basic}` };
+  }
+  return {};
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
-  const res = await fetch(url);
+  const headers = getWpAuthHeaders();
+  const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText} (${url})`);
   return (await res.json()) as T;
 }
@@ -220,10 +236,24 @@ const mediaIdByUrl = new Map<string, string>();
 
 /** ------------------ PAYLOAD UPSERTS ------------------ */
 
+function fallbackEmailForWpUserId(id: number) {
+  return `wp-${id}@import.local`;
+}
+
+async function fetchWpUserWithEmail(userId: number): Promise<WPUser> {
+  // Try context=edit (email is usually only available there)
+  try {
+    return await fetchJson<WPUser>(`${WP_API}/users/${userId}?context=edit`);
+  } catch {
+    // Fallback to public view (no email)
+    return await fetchJson<WPUser>(`${WP_API}/users/${userId}`);
+  }
+}
+
 async function upsertUser(payload: any, wpAuthor: WPUser) {
   if (userIdByWpId.has(wpAuthor.id)) return userIdByWpId.get(wpAuthor.id)!;
 
-  const email = `wp-${wpAuthor.id}@import.local`;
+  const email = (wpAuthor.email || "").trim() || fallbackEmailForWpUserId(wpAuthor.id);
   const name = wpAuthor.name || wpAuthor.slug || `WP User ${wpAuthor.id}`;
   const bio = wpAuthor.description || "";
 
@@ -290,10 +320,7 @@ async function createOrReuseMedia(payload: any, url: string, alt?: string, capti
   const normalizedUrl = (url || "").trim();
   if (!normalizedUrl) return undefined;
 
-  // Reuse already uploaded same URL (works for repeated images)
   if (mediaIdByUrl.has(normalizedUrl)) return mediaIdByUrl.get(normalizedUrl)!;
-
-  // Optional: reuse by finding existing doc with same alt+caption isn't reliable; keep URL cache only.
 
   const filePath = await downloadToTmp(normalizedUrl);
 
@@ -310,10 +337,9 @@ async function createOrReuseMedia(payload: any, url: string, alt?: string, capti
   return doc.id as string;
 }
 
-/** ------------------ FEATURED IMAGE RESOLUTION (ROBUST) ------------------ */
+/** ------------------ FEATURED IMAGE RESOLUTION ------------------ */
 
 function resolveUrlFromWpMediaObject(m: any): string | undefined {
-  // Try common locations in WP media objects (embedded or fetched)
   return (
     m?.source_url ||
     m?.media_details?.sizes?.full?.source_url ||
@@ -325,7 +351,6 @@ function resolveUrlFromWpMediaObject(m: any): string | undefined {
 }
 
 async function resolveFeaturedMediaFromPost(wpPost: WPPost): Promise<{ url?: string; alt?: string; caption?: string }> {
-  // 1) Prefer embedded
   const embedded = wpPost._embedded?.["wp:featuredmedia"]?.[0];
   const embeddedUrl = resolveUrlFromWpMediaObject(embedded);
   if (embeddedUrl) {
@@ -336,7 +361,6 @@ async function resolveFeaturedMediaFromPost(wpPost: WPPost): Promise<{ url?: str
     };
   }
 
-  // 2) Fallback to featured_media id
   const featuredId = wpPost.featured_media;
   if (typeof featuredId === "number" && featuredId > 0) {
     const media = await fetchJson<WPMedia>(`${WP_API}/media/${featuredId}`);
@@ -441,7 +465,6 @@ function parseInlineChildren(node: Node, ctx: InlineCtx = {}): any[] {
       continue;
     }
 
-    // ignore img in inline parsing (handled as block uploads)
     if (tag === "img") continue;
 
     out.push(...parseInlineChildren(el, ctx));
@@ -505,9 +528,6 @@ function makeListItem(childrenInline: any[]) {
   };
 }
 
-/**
- * Convert WP HTML -> Lexical JSON (body images already OK)
- */
 async function htmlToLexical(payload: any, html: string) {
   const dom = new JSDOM(`<body>${html || ""}</body>`);
   const document = dom.window.document;
@@ -576,10 +596,6 @@ async function htmlToLexical(payload: any, html: string) {
 
         const mediaId = src ? await createOrReuseMedia(payload, src, alt, caption) : undefined;
         if (mediaId) rootChildren.push(makeUpload(mediaId));
-
-        if (caption) {
-          rootChildren.push(makeParagraph([{ type: "text", version: 1, text: caption, format: 0, detail: 0, mode: "normal", style: "" }]));
-        }
       }
       continue;
     }
@@ -602,7 +618,6 @@ async function htmlToLexical(payload: any, html: string) {
         continue;
       }
 
-      // Replace each <img> with token so we can keep order (nested images supported)
       const tokenPrefix = "__IMG_TOKEN__";
       const clone = el.cloneNode(true) as Element;
 
@@ -667,7 +682,6 @@ async function run() {
   const postMap = await readPostMap();
 
   console.log("Fetching 10 posts from WordPress...");
-  // IMPORTANT: `_embed=1` ensures featured media is included when possible
   const posts = await fetchJson<WPPost[]>(`${WP_API}/posts?per_page=10&_embed=1`);
 
   for (const wpPost of posts) {
@@ -676,8 +690,8 @@ async function run() {
     const title = stripHtml(wpPost.title?.rendered || "");
     const excerpt = stripHtml(wpPost.excerpt?.rendered || "");
 
-    // AUTHOR
-    const wpAuthor = await fetchJson<WPUser>(`${WP_API}/users/${wpPost.author}`);
+    // AUTHOR (try to fetch email with context=edit; fallback to synthetic)
+    const wpAuthor = await fetchWpUserWithEmail(wpPost.author);
     const authorId = await upsertUser(payload, wpAuthor);
 
     // CATEGORIES
@@ -687,22 +701,18 @@ async function run() {
       categoryIds.push(await upsertCategory(payload, wpCat));
     }
 
-    // FEATURED IMAGE (download + create media + relate to post.image)
+    // FEATURED IMAGE
     let featuredImageId: string | undefined;
     try {
       const featuredInfo = await resolveFeaturedMediaFromPost(wpPost);
-
-      if (!featuredInfo.url) {
-        console.warn(`  ⚠ No featured URL found for post ${wpPost.id} (${wpPost.slug}). featured_media=${wpPost.featured_media ?? "n/a"}`);
-      } else {
+      if (featuredInfo.url) {
         featuredImageId = await createOrReuseMedia(payload, featuredInfo.url, featuredInfo.alt, featuredInfo.caption);
-        console.log("  ✓ Featured media:", featuredImageId, featuredInfo.url);
       }
     } catch (e: any) {
       console.warn(`  ⚠ Featured media failed for ${wpPost.slug}:`, e?.message || e);
     }
 
-    // CONTENT (body images ok)
+    // CONTENT
     const lexicalContent = await htmlToLexical(payload, wpPost.content?.rendered || "");
 
     // SEO (required)
@@ -710,28 +720,26 @@ async function run() {
     const metaDescription = getMetaDescription(wpPost.excerpt?.rendered || "", wpPost.content?.rendered || "");
 
     const dataToSave: any = {
-      slug: wpPost.slug, // always reflect WP slug
+      slug: wpPost.slug,
       title: title || `Post ${wpPost.id}`,
       excerpt: excerpt || title || "",
       category: categoryIds,
-      image: featuredImageId, // ✅ relation field in Posts: { name: "image", type: "upload", relationTo: "media" }
+      image: featuredImageId,
       publishedDate: wpPost.date,
       content: lexicalContent,
       meta: {
         title: metaTitle,
         description: metaDescription,
       },
-      author: authorId, // requires Posts.author relationship
+      author: authorId,
     };
 
-    // Update strategy that supports slug changes:
-    // Use wpId->payloadId mapping first; otherwise fallback find by current slug.
+    // Slug update strategy (wpId -> payloadId map)
     const wpIdKey = String(wpPost.id);
     const mappedPayloadId = postMap[wpIdKey];
 
     if (mappedPayloadId) {
       await payload.update({ collection: "posts", id: mappedPayloadId, data: dataToSave });
-      console.log("✓ Updated by map (slug updated if changed):", wpPost.slug);
     } else {
       const existingBySlug = await payload.find({
         collection: "posts",
@@ -743,11 +751,9 @@ async function run() {
         const payloadId = existingBySlug.docs[0].id as string;
         await payload.update({ collection: "posts", id: payloadId, data: dataToSave });
         postMap[wpIdKey] = payloadId;
-        console.log("✓ Updated by slug:", wpPost.slug);
       } else {
         const created = await payload.create({ collection: "posts", data: dataToSave });
         postMap[wpIdKey] = created.id as string;
-        console.log("✓ Created:", wpPost.slug);
       }
     }
 
