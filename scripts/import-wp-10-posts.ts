@@ -10,24 +10,29 @@ import { getPayload } from "payload";
 import payloadConfig from "../src/payload.config"; // adjust if needed
 
 /**
- * Imports (10 posts):
- * - Posts: title, excerpt, categories, author (relationship), featured image, content (Lexical), SEO meta
- * - Users: creates/updates authors in `users` (auth collection -> needs password)
- * - Media: uploads featured image + ALL body images (supports lazy-load attrs + nested images)
+ * ✅ Imports (10 posts) WordPress -> Payload (Local API)
  *
- * REQUIREMENTS IN YOUR PAYLOAD SCHEMA
- * - Posts must have: `author` relationship field -> relationTo: "users"
- *   { name: "author", type: "relationship", relationTo: "users" }
+ * Creates/updates:
+ * - Users (authors) in `users` and relates post.author (Posts must have `author` relationship field)
+ * - Categories in `categories` and relates post.category (hasMany)
+ * - Media in `media`:
+ *    - Featured image (robust resolution using _embedded AND featured_media ID fallback)
+ *    - Body images (img/figure + lazy-load attrs + nested)
+ * - Posts in `posts`:
+ *    - slug from WP (and updates it even if WP slug changes later) using a local wpId->payloadId map file
+ *    - title, excerpt, publishedDate, SEO meta required fields
+ *    - content (Lexical JSON with paragraphs/headings/lists/bold/italic/links/upload nodes)
  *
- * ENV
- * - PAYLOAD_SECRET set (required)
- * - WP_BASE="https://example.com" (optional, else edit constant)
+ * ENV:
+ * - PAYLOAD_SECRET required
+ * - WP_BASE optional (defaults below)
  */
 
-const WP_BASE = process.env.WP_BASE || "https://technibus.com.br";
+const WP_BASE = process.env.WP_BASE || "https://YOUR-WP-SITE.com";
 const WP_API = `${WP_BASE.replace(/\/$/, "")}/wp-json/wp/v2`;
 
 const TMP_DIR = path.join(process.cwd(), ".tmp-wp-import");
+const POST_MAP_FILE = path.join(TMP_DIR, "wp-post-map.json");
 
 // Lexical text format bits
 const FORMAT_BOLD = 1;
@@ -42,6 +47,7 @@ type WPPost = {
   content: { rendered: string };
   author: number;
   categories: number[];
+  featured_media?: number; // WP field
   _embedded?: any;
 };
 
@@ -59,8 +65,34 @@ type WPCategory = {
   description?: string;
 };
 
+type WPMedia = {
+  id: number;
+  source_url?: string;
+  alt_text?: string;
+  caption?: { rendered?: string };
+  guid?: { rendered?: string };
+  media_details?: {
+    sizes?: Record<string, { source_url?: string }>;
+  };
+};
+
 async function ensureTmpDir() {
   await fs.mkdir(TMP_DIR, { recursive: true });
+}
+
+async function readPostMap(): Promise<Record<string, string>> {
+  try {
+    const raw = await fs.readFile(POST_MAP_FILE, "utf-8");
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") return parsed;
+    return {};
+  } catch {
+    return {};
+  }
+}
+
+async function writePostMap(map: Record<string, string>) {
+  await fs.writeFile(POST_MAP_FILE, JSON.stringify(map, null, 2), "utf-8");
 }
 
 function decodeEntities(str: string) {
@@ -122,8 +154,8 @@ function guessExtFromUrl(url: string) {
 async function downloadToTmp(url: string) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Image download failed: ${res.status} ${res.statusText} (${url})`);
-
   const buffer = Buffer.from(await res.arrayBuffer());
+
   const ext = guessExtFromUrl(url);
   const fileName = `${crypto.randomUUID()}.${ext}`;
   const filePath = path.join(TMP_DIR, fileName);
@@ -162,6 +194,7 @@ function getBestImageUrl(img: Element) {
   ].filter(Boolean) as string[];
 
   const srcset = img.getAttribute("data-srcset") || img.getAttribute("data-lazy-srcset") || img.getAttribute("srcset") || "";
+
   const bestFromSrcset = pickFromSrcset(srcset);
 
   const src = img.getAttribute("src") || "";
@@ -180,7 +213,7 @@ function getBestImageUrl(img: Element) {
   return "";
 }
 
-/** ------------------ CACHES (avoid duplicates) ------------------ */
+/** ------------------ CACHES ------------------ */
 const userIdByWpId = new Map<number, string>();
 const categoryIdByWpSlug = new Map<string, string>();
 const mediaIdByUrl = new Map<string, string>();
@@ -205,11 +238,7 @@ async function upsertUser(payload: any, wpAuthor: WPUser) {
     doc = await payload.update({
       collection: "users",
       id: existing.docs[0].id,
-      data: {
-        name,
-        role: "Author",
-        bio,
-      },
+      data: { name, role: "Author", bio },
     });
   } else {
     doc = await payload.create({
@@ -244,19 +273,12 @@ async function upsertCategory(payload: any, wpCat: WPCategory) {
     doc = await payload.update({
       collection: "categories",
       id: existing.docs[0].id,
-      data: {
-        title: wpCat.name,
-        description,
-      },
+      data: { title: wpCat.name, description },
     });
   } else {
     doc = await payload.create({
       collection: "categories",
-      data: {
-        title: wpCat.name,
-        slug: wpCat.slug,
-        description,
-      },
+      data: { title: wpCat.name, slug: wpCat.slug, description },
     });
   }
 
@@ -268,7 +290,10 @@ async function createOrReuseMedia(payload: any, url: string, alt?: string, capti
   const normalizedUrl = (url || "").trim();
   if (!normalizedUrl) return undefined;
 
+  // Reuse already uploaded same URL (works for repeated images)
   if (mediaIdByUrl.has(normalizedUrl)) return mediaIdByUrl.get(normalizedUrl)!;
+
+  // Optional: reuse by finding existing doc with same alt+caption isn't reliable; keep URL cache only.
 
   const filePath = await downloadToTmp(normalizedUrl);
 
@@ -285,12 +310,50 @@ async function createOrReuseMedia(payload: any, url: string, alt?: string, capti
   return doc.id as string;
 }
 
+/** ------------------ FEATURED IMAGE RESOLUTION (ROBUST) ------------------ */
+
+function resolveUrlFromWpMediaObject(m: any): string | undefined {
+  // Try common locations in WP media objects (embedded or fetched)
+  return (
+    m?.source_url ||
+    m?.media_details?.sizes?.full?.source_url ||
+    m?.media_details?.sizes?.large?.source_url ||
+    m?.media_details?.sizes?.medium_large?.source_url ||
+    m?.guid?.rendered ||
+    undefined
+  );
+}
+
+async function resolveFeaturedMediaFromPost(wpPost: WPPost): Promise<{ url?: string; alt?: string; caption?: string }> {
+  // 1) Prefer embedded
+  const embedded = wpPost._embedded?.["wp:featuredmedia"]?.[0];
+  const embeddedUrl = resolveUrlFromWpMediaObject(embedded);
+  if (embeddedUrl) {
+    return {
+      url: embeddedUrl,
+      alt: embedded?.alt_text || "",
+      caption: embedded?.caption?.rendered ? stripHtml(embedded.caption.rendered) : "",
+    };
+  }
+
+  // 2) Fallback to featured_media id
+  const featuredId = wpPost.featured_media;
+  if (typeof featuredId === "number" && featuredId > 0) {
+    const media = await fetchJson<WPMedia>(`${WP_API}/media/${featuredId}`);
+    const url = resolveUrlFromWpMediaObject(media);
+    return {
+      url,
+      alt: media.alt_text || "",
+      caption: media.caption?.rendered ? stripHtml(media.caption.rendered) : "",
+    };
+  }
+
+  return {};
+}
+
 /** ------------------ LEXICAL BUILDERS ------------------ */
 
-type InlineCtx = {
-  bold?: boolean;
-  italic?: boolean;
-};
+type InlineCtx = { bold?: boolean; italic?: boolean };
 
 function pushTextNode(target: any[], text: string, ctx: InlineCtx) {
   const t = normalizeSpaces(text);
@@ -378,7 +441,7 @@ function parseInlineChildren(node: Node, ctx: InlineCtx = {}): any[] {
       continue;
     }
 
-    // IMPORTANT: ignore img in inline parsing (handled as block uploads)
+    // ignore img in inline parsing (handled as block uploads)
     if (tag === "img") continue;
 
     out.push(...parseInlineChildren(el, ctx));
@@ -408,26 +471,11 @@ function splitParagraphByNewlines(inlineNodes: any[]) {
 }
 
 function makeParagraph(childrenInline: any[]) {
-  return {
-    type: "paragraph",
-    version: 1,
-    direction: null,
-    format: "",
-    indent: 0,
-    children: childrenInline,
-  };
+  return { type: "paragraph", version: 1, direction: null, format: "", indent: 0, children: childrenInline };
 }
 
 function makeHeading(tag: string, childrenInline: any[]) {
-  return {
-    type: "heading",
-    version: 1,
-    tag,
-    direction: null,
-    format: "",
-    indent: 0,
-    children: childrenInline,
-  };
+  return { type: "heading", version: 1, tag, direction: null, format: "", indent: 0, children: childrenInline };
 }
 
 function makeUpload(mediaId: string) {
@@ -443,15 +491,7 @@ function makeUpload(mediaId: string) {
 }
 
 function makeList(listType: "bullet" | "number", items: any[]) {
-  return {
-    type: "list",
-    version: 1,
-    listType,
-    direction: null,
-    format: "",
-    indent: 0,
-    children: items,
-  };
+  return { type: "list", version: 1, listType, direction: null, format: "", indent: 0, children: items };
 }
 
 function makeListItem(childrenInline: any[]) {
@@ -461,27 +501,12 @@ function makeListItem(childrenInline: any[]) {
     direction: null,
     format: "",
     indent: 0,
-    children: [
-      {
-        type: "paragraph",
-        version: 1,
-        direction: null,
-        format: "",
-        indent: 0,
-        children: childrenInline,
-      },
-    ],
+    children: [makeParagraph(childrenInline)],
   };
 }
 
 /**
- * Convert WP HTML -> Payload Lexical JSON
- * - Preserves paragraphs/headings/lists
- * - Preserves strong/em and <a>
- * - Imports ALL images:
- *   - standalone <img>
- *   - <figure><img> + <figcaption> (caption stored in media doc)
- *   - nested images anywhere inside paragraphs (including <a><img/></a>, wrappers, lazy-load attrs)
+ * Convert WP HTML -> Lexical JSON (body images already OK)
  */
 async function htmlToLexical(payload: any, html: string) {
   const dom = new JSDOM(`<body>${html || ""}</body>`);
@@ -489,12 +514,10 @@ async function htmlToLexical(payload: any, html: string) {
 
   const rootChildren: any[] = [];
 
-  // Turn <br> into newline text nodes for text processing
   for (const br of Array.from(document.body.querySelectorAll("br"))) {
     br.replaceWith(document.createTextNode("\n"));
   }
 
-  // Walk block-ish nodes in DOM order (Gutenberg wrappers included)
   function* walk(node: Element): Generator<Element> {
     for (const child of Array.from(node.children)) {
       const tag = child.tagName.toLowerCase();
@@ -524,14 +547,12 @@ async function htmlToLexical(payload: any, html: string) {
   for (const el of walk(document.body)) {
     const tag = el.tagName.toLowerCase();
 
-    // Headings
     if (tag.startsWith("h")) {
       const inline = parseInlineChildren(el);
       if (inline.length) rootChildren.push(makeHeading(tag, inline));
       continue;
     }
 
-    // Lists
     if (tag === "ul" || tag === "ol") {
       const listType = tag === "ol" ? "number" : "bullet";
       const items = Array.from(el.querySelectorAll(":scope > li"))
@@ -540,12 +561,10 @@ async function htmlToLexical(payload: any, html: string) {
           return inline.length ? makeListItem(inline) : null;
         })
         .filter(Boolean) as any[];
-
       if (items.length) rootChildren.push(makeList(listType, items));
       continue;
     }
 
-    // Figure: image + caption
     if (tag === "figure") {
       const img = el.querySelector("img");
       const figcaption = el.querySelector("figcaption");
@@ -558,16 +577,13 @@ async function htmlToLexical(payload: any, html: string) {
         const mediaId = src ? await createOrReuseMedia(payload, src, alt, caption) : undefined;
         if (mediaId) rootChildren.push(makeUpload(mediaId));
 
-        // Optional: show caption as paragraph too (remove if you don't want visible captions)
         if (caption) {
           rootChildren.push(makeParagraph([{ type: "text", version: 1, text: caption, format: 0, detail: 0, mode: "normal", style: "" }]));
         }
       }
-
       continue;
     }
 
-    // Standalone image
     if (tag === "img") {
       const src = getBestImageUrl(el);
       const alt = el.getAttribute("alt") || "";
@@ -576,11 +592,9 @@ async function htmlToLexical(payload: any, html: string) {
       continue;
     }
 
-    // Paragraph-like (also handles nested images anywhere inside)
     if (tag === "p" || tag === "blockquote") {
       const imgs = Array.from(el.querySelectorAll("img"));
 
-      // No images: normal paragraph conversion
       if (!imgs.length) {
         const inline = parseInlineChildren(el);
         const parts = splitParagraphByNewlines(inline);
@@ -588,8 +602,7 @@ async function htmlToLexical(payload: any, html: string) {
         continue;
       }
 
-      // With images:
-      // Replace each <img> with token so we can split paragraph around them (works for nested <a><img/></a>, etc.)
+      // Replace each <img> with token so we can keep order (nested images supported)
       const tokenPrefix = "__IMG_TOKEN__";
       const clone = el.cloneNode(true) as Element;
 
@@ -608,11 +621,7 @@ async function htmlToLexical(payload: any, html: string) {
         img.replaceWith(clone.ownerDocument!.createTextNode(`${tokenPrefix}${i}__`));
       }
 
-      // Get the remaining visible text from clone, preserving bold/italic/link for plain text segments
       const inlineWithTokens = parseInlineChildren(clone);
-
-      // We'll split by tokens only using the TEXT stream to decide boundaries.
-      // For simplicity + reliability, we render plain text per segment (keeps images order correct).
       const textStream = inlineWithTokens
         .filter((n) => n.type === "text")
         .map((n) => n.text)
@@ -625,16 +634,13 @@ async function htmlToLexical(payload: any, html: string) {
         if (seg) {
           rootChildren.push(makeParagraph([{ type: "text", version: 1, text: seg, format: 0, detail: 0, mode: "normal", style: "" }]));
         }
-        if (i < uploadedIds.length) {
-          rootChildren.push(makeUpload(uploadedIds[i]));
-        }
+        if (i < uploadedIds.length) rootChildren.push(makeUpload(uploadedIds[i]));
       }
 
       continue;
     }
   }
 
-  // Fallback if nothing was captured
   if (!rootChildren.length) {
     const text = stripHtml(html);
     rootChildren.push(makeParagraph([{ type: "text", version: 1, text, format: 0, detail: 0, mode: "normal", style: "" }]));
@@ -658,10 +664,11 @@ async function run() {
   await ensureTmpDir();
 
   const payload = await getPayload({ config: payloadConfig });
+  const postMap = await readPostMap();
 
   console.log("Fetching 10 posts from WordPress...");
-
-  const posts = await fetchJson<WPPost[]>(`${WP_API}/posts?_embed&per_page=10`);
+  // IMPORTANT: `_embed=1` ensures featured media is included when possible
+  const posts = await fetchJson<WPPost[]>(`${WP_API}/posts?per_page=10&_embed=1`);
 
   for (const wpPost of posts) {
     console.log("Importing:", wpPost.slug);
@@ -669,70 +676,82 @@ async function run() {
     const title = stripHtml(wpPost.title?.rendered || "");
     const excerpt = stripHtml(wpPost.excerpt?.rendered || "");
 
-    // --- AUTHOR (create/upsert + RELATE) ---
+    // AUTHOR
     const wpAuthor = await fetchJson<WPUser>(`${WP_API}/users/${wpPost.author}`);
     const authorId = await upsertUser(payload, wpAuthor);
 
-    // --- CATEGORIES (create/upsert + RELATE) ---
+    // CATEGORIES
     const categoryIds: string[] = [];
     for (const catId of wpPost.categories || []) {
       const wpCat = await fetchJson<WPCategory>(`${WP_API}/categories/${catId}`);
-      const payloadCatId = await upsertCategory(payload, wpCat);
-      categoryIds.push(payloadCatId);
+      categoryIds.push(await upsertCategory(payload, wpCat));
     }
 
-    // --- FEATURED IMAGE (create media + RELATE in posts.image) ---
+    // FEATURED IMAGE (download + create media + relate to post.image)
     let featuredImageId: string | undefined;
-    const featured = wpPost._embedded?.["wp:featuredmedia"]?.[0];
+    try {
+      const featuredInfo = await resolveFeaturedMediaFromPost(wpPost);
 
-    if (featured?.source_url) {
-      const caption = featured?.caption?.rendered ? stripHtml(featured.caption.rendered) : "";
-      featuredImageId = await createOrReuseMedia(payload, featured.source_url, featured.alt_text || "", caption);
+      if (!featuredInfo.url) {
+        console.warn(`  ⚠ No featured URL found for post ${wpPost.id} (${wpPost.slug}). featured_media=${wpPost.featured_media ?? "n/a"}`);
+      } else {
+        featuredImageId = await createOrReuseMedia(payload, featuredInfo.url, featuredInfo.alt, featuredInfo.caption);
+        console.log("  ✓ Featured media:", featuredImageId, featuredInfo.url);
+      }
+    } catch (e: any) {
+      console.warn(`  ⚠ Featured media failed for ${wpPost.slug}:`, e?.message || e);
     }
 
-    // --- CONTENT (create media for body images + RELATE via upload nodes) ---
+    // CONTENT (body images ok)
     const lexicalContent = await htmlToLexical(payload, wpPost.content?.rendered || "");
 
-    // --- SEO (required) ---
+    // SEO (required)
     const metaTitle = clampText(title, 60) || title || `Post ${wpPost.id}`;
     const metaDescription = getMetaDescription(wpPost.excerpt?.rendered || "", wpPost.content?.rendered || "");
 
     const dataToSave: any = {
-      slug: wpPost.slug,
+      slug: wpPost.slug, // always reflect WP slug
       title: title || `Post ${wpPost.id}`,
       excerpt: excerpt || title || "",
       category: categoryIds,
-      image: featuredImageId,
+      image: featuredImageId, // ✅ relation field in Posts: { name: "image", type: "upload", relationTo: "media" }
       publishedDate: wpPost.date,
       content: lexicalContent,
       meta: {
         title: metaTitle,
         description: metaDescription,
       },
-      author: authorId,
+      author: authorId, // requires Posts.author relationship
     };
 
-    // Upsert by slug so you can rerun safely
-    const existing = await payload.find({
-      collection: "posts",
-      where: { slug: { equals: wpPost.slug } },
-      limit: 1,
-    });
+    // Update strategy that supports slug changes:
+    // Use wpId->payloadId mapping first; otherwise fallback find by current slug.
+    const wpIdKey = String(wpPost.id);
+    const mappedPayloadId = postMap[wpIdKey];
 
-    if (existing.docs.length) {
-      await payload.update({
-        collection: "posts",
-        id: existing.docs[0].id,
-        data: dataToSave,
-      });
-      console.log("✓ Updated:", wpPost.slug);
+    if (mappedPayloadId) {
+      await payload.update({ collection: "posts", id: mappedPayloadId, data: dataToSave });
+      console.log("✓ Updated by map (slug updated if changed):", wpPost.slug);
     } else {
-      await payload.create({
+      const existingBySlug = await payload.find({
         collection: "posts",
-        data: dataToSave,
+        where: { slug: { equals: wpPost.slug } },
+        limit: 1,
       });
-      console.log("✓ Created:", wpPost.slug);
+
+      if (existingBySlug.docs.length) {
+        const payloadId = existingBySlug.docs[0].id as string;
+        await payload.update({ collection: "posts", id: payloadId, data: dataToSave });
+        postMap[wpIdKey] = payloadId;
+        console.log("✓ Updated by slug:", wpPost.slug);
+      } else {
+        const created = await payload.create({ collection: "posts", data: dataToSave });
+        postMap[wpIdKey] = created.id as string;
+        console.log("✓ Created:", wpPost.slug);
+      }
     }
+
+    await writePostMap(postMap);
   }
 
   console.log("IMPORT FINISHED");
