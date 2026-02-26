@@ -83,8 +83,11 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="bg-primary py-24">
-        <div className="container"></div>
+      <section className="bg-secondary py-24">
+        <div className="container">
+          <h2 className="text-primary border-secondary mb-8 border-b pb-3 text-4xl font-medium">Lat.Bus - Feira Latinoamericana do Transporte</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore cum totam suscipit, culpa et minus magni quibusdam eaque accusantium officiis!</p>
+        </div>
       </section>
     </main>
   );

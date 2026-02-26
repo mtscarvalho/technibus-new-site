@@ -20,7 +20,7 @@ export async function Footer() {
   //   ];
 
   return (
-    <footer className="bg-default text-primary py-12" data-theme="dark">
+    <footer className="bg-brand-primary text-on-brand-primary py-12" data-theme="dark">
       <div className="container grid gap-10 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">Boilerplate</h2>

@@ -15,5 +15,20 @@ export function PayloadImage({ image, className, width, height, loading = "lazy"
     return null;
   }
 
-  return <Image key={image.id} className={className} src={image.url!} width={width ? width : image.width!} height={height ? height : image.height!} alt={image.alt!} loading={loading} placeholder={image.blurhash ? "blur" : "empty"} blurDataURL={image.blurhash || undefined} />;
+  return (
+    <figure>
+      <Image
+        key={image.id}
+        className={className}
+        src={image.url!}
+        width={width ? width : image.width!}
+        height={height ? height : image.height!}
+        alt={image.alt!}
+        loading={loading}
+        placeholder={image.blurhash ? "blur" : "empty"}
+        blurDataURL={image.blurhash || undefined}
+      />
+      {image.caption && <figcaption className="text-secondary pt-2 text-right italic">{image.caption}</figcaption>}
+    </figure>
+  );
 }

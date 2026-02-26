@@ -8,7 +8,7 @@ import MostRead from "@/components/MostRead";
 import { PayloadImage } from "@/components/Payload/Image";
 import { RichText } from "@/components/RichText";
 import { Facebook, LinkedIn, Threads, WhatsApp, X } from "@/components/SocialIcon";
-import { Media } from "@/payload-types";
+import { Category, Media } from "@/payload-types";
 
 type PageArgs = {
   params: Promise<{
@@ -44,7 +44,14 @@ export default async function Page({ params }: PageArgs) {
             <div className="space-y-8 lg:col-span-9">
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
-                  <span className="uppertitle">Industría</span>
+                  <p className="uppertitle">
+                    {post.category.map((item, index) => (
+                      <span key={(item as Category).id}>
+                        {(item as Category).title}
+                        {index < post.category.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </p>
                   <h1 className="text-primary text-4xl font-medium">{post.title}</h1>
                 </div>
                 <p className="text-secondary">{post.excerpt}</p>
@@ -83,7 +90,7 @@ export default async function Page({ params }: PageArgs) {
                   </li>
                 </ul>
               </div>
-              <PayloadImage className="rounded-md" image={post.image as Media} />
+              <PayloadImage className="w-full rounded-md" image={post.image as Media} />
               {post.content && <RichText data={post.content} />}
             </div>
             <div className="lg:col-span-3">

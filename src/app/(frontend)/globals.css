@@ -43,18 +43,7 @@
   --color-brand-blue-600: #00587d;
   --color-brand-blue-700: #004866;
   --color-brand-blue-800: #002433;
-  --color-brand-blue-900: #00121a;
-
-  /* --color-brand-blue-50: #eaf5ff;
-  --color-brand-blue-100: #c5eeff;
-  --color-brand-blue-200: #a0e2ff;
-  --color-brand-blue-300: #7bd7ff;
-  --color-brand-blue-400: #56ccff;
-  --color-brand-blue-500: #1499d1;
-  --color-brand-blue-600: #00587d;
-  --color-brand-blue-700: #004866;
-  --color-brand-blue-800: #002433;
-  --color-brand-blue-900: #00121a; */
+  --color-regal-blue-900: #00121a;
 
   --color-neutral-0: #ffffff;
   --color-neutral-50: #f7f7f7;
@@ -87,10 +76,10 @@
   --color-system-positive-400: var(--color-brand-blue-300);
   --color-system-positive-500: var(--color-brand-blue-400);
   --color-system-positive-600: var(--color-brand-blue-500);
-  --color-system-positive-700: var(--color-brand-blue-950);
+  --color-system-positive-700: var(--color-regal-blue-900);
   --color-system-positive-800: var(--color-brand-blue-800);
   --color-system-positive-900: var(--color-brand-blue-800);
-  --color-system-positive-1000: var(--color-brand-blue-900);
+  --color-system-positive-1000: var(--color-regal-blue-900);
 
   --color-system-success-100: #e0f2fe;
   --color-system-success-200: #bae6fd;
@@ -115,7 +104,7 @@
   --color-system-warning-1000: #451a03;
 
   --semantic-color-background-brand-primary-hover: var(--color-brand-blue-800);
-  --semantic-color-background-brand-primary: var(--color-brand-blue-950);
+  --semantic-color-background-brand-primary: var(--color-regal-blue-950);
   --semantic-color-background-brand-secondary-hover: var(--color-brand-orange-700);
   --semantic-color-background-brand-secondary: var(--color-brand-orange-600);
   --semantic-color-background-brand-tertiary-hover: var(--color-brand-blue-50);
@@ -149,7 +138,7 @@
   --semantic-color-background-warning-secondary: var(--color-system-warning-200);
   --semantic-color-background-warning-tertiary-hover: var(--color-system-warning-200);
   --semantic-color-background-warning-tertiary: var(--color-system-warning-100);
-  --semantic-color-border-brand-primary: var(--color-brand-blue-950);
+  --semantic-color-border-brand-primary: var(--color-regal-blue-900);
   --semantic-color-border-brand-secondary: var(--color-brand-orange-600);
   --semantic-color-border-brand-tertiary: var(--color-brand-blue-200);
   --semantic-color-border-danger-primary: var(--color-system-danger-700);
@@ -170,7 +159,7 @@
   --semantic-color-icon-on-brand-primary: var(--color-neutral-0);
   --semantic-color-icon-on-brand-secondary: var(--color-neutral-0);
   --semantic-color-icon-on-brand-tertiary: var(--color-brand-blue-800);
-  --semantic-color-icon-brand-primary: var(--color-brand-blue-950);
+  --semantic-color-icon-brand-primary: var(--color-regal-blue-900);
   --semantic-color-icon-brand-secondary: var(--color-brand-orange-600);
   --semantic-color-icon-brand-tertiary: var(--color-brand-blue-200);
   --semantic-color-icon-danger-on-danger-primary: var(--color-system-danger-100);
@@ -201,7 +190,7 @@
   --semantic-color-text-on-brand-primary: var(--color-neutral-0);
   --semantic-color-text-on-brand-secondary: var(--color-neutral-0);
   --semantic-color-text-on-brand-tertiary: var(--color-brand-blue-800);
-  --semantic-color-text-brand-primary: var(--color-brand-blue-900);
+  --semantic-color-text-brand-primary: var(--color-regal-blue-900);
   --semantic-color-text-brand-secondary: var(--color-brand-orange-700);
   --semantic-color-text-brand-tertiary: var(--color-brand-blue-100);
   --semantic-color-text-danger-on-danger-primary: var(--color-system-danger-100);
@@ -233,7 +222,7 @@
 
 .dark {
   --semantic-color-background-brand-primary-hover: var(--color-brand-blue-500);
-  --semantic-color-background-brand-primary: var(--color-brand-blue-950);
+  --semantic-color-background-brand-primary: var(--color-regal-blue-900);
   --semantic-color-background-brand-secondary-hover: var(--color-brand-orange-500);
   --semantic-color-background-brand-secondary: var(--color-brand-orange-600);
   --semantic-color-background-brand-tertiary-hover: var(--color-brand-blue-200);
@@ -317,7 +306,7 @@
   --semantic-color-icon-warning-secondary: var(--color-system-warning-400);
   --semantic-color-icon-warning-tertiary: var(--color-system-warning-600);
   --semantic-color-text-brand-primary: var(--color-brand-blue-500);
-  --semantic-color-text-brand-secondary: var(--color-brand-blue-950);
+  --semantic-color-text-brand-secondary: var(--color-regal-blue-900);
   --semantic-color-text-brand-tertiary: var(--color-brand-blue-200);
   --semantic-color-text-danger-primary: var(--color-system-danger-200);
   --semantic-color-text-danger-secondary: var(--color-system-danger-400);
@@ -484,7 +473,7 @@
   } */
 
   body {
-    @apply bg-secondary text-primary;
+    @apply bg-primary text-primary;
   }
 }
 
@@ -506,7 +495,7 @@
   }
 
   .payload-richtext {
-    @apply text-secondary;
+    /* @apply; */
   }
 
   .payload-richtext > * + * {
