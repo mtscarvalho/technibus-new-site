@@ -8,7 +8,7 @@ export const Media: CollectionConfig = {
     plural: "Mídias",
   },
   admin: {
-    group: "Biblioteca",
+    group: "Globais",
   },
   access: {
     read: () => true,

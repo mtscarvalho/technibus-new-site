@@ -52,3 +52,19 @@ export const fetchAllPosts = async (): Promise<Post[]> => {
 
   return data.docs;
 };
+
+export const fetchPaginatedPostsByCategory = async (categoryId: number, page: number = 1): Promise<PaginatedDocs<Post>> => {
+  const { isEnabled: draft } = await draftMode();
+  const data = await payload.find({
+    collection: "posts",
+    depth: 1,
+    draft,
+    limit: 9,
+    page: page,
+    where: {
+      and: [{ category: { equals: categoryId } }, ...(draft ? [] : [{ _status: { equals: "published" } }])],
+    },
+  });
+
+  return data;
+};

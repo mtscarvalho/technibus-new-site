@@ -9,22 +9,14 @@ import { MenuIcon, Search, X } from "lucide-react";
 
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { Category } from "@/payload-types";
 import { Button } from "../Button";
 
-const MENU_ITEMS = [
-  { label: "Empresas & Negócios", url: "/" },
-  { label: "Entrevista & Opinião", url: "/" },
-  { label: "Indústria", url: "/" },
-  { label: "Lat.bus", url: "/" },
-  { label: "Metroferroviário", url: "/" },
-  { label: "Mobilidade", url: "/" },
-  { label: "Rodoviário", url: "/" },
-  { label: "Sustentabilidade", url: "/" },
-  { label: "Technibus na história", url: "/" },
-  { label: "Tecnologia", url: "/" },
-];
+type MenuProps = {
+  categories: Category[];
+};
 
-export function Menu() {
+export function Menu({ categories }: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -79,10 +71,10 @@ export function Menu() {
             <nav id="main-navigation" className={`basis-full items-center lg:basis-auto lg:justify-center lg:py-0 ${isOpen ? "pt-10" : ""}`}>
               {/* Desktop Menu */}
               <ul className="hidden max-w-3xl justify-center py-2 lg:flex lg:flex-wrap lg:items-center">
-                {MENU_ITEMS.map((item) => (
-                  <li key={item.label} className="mb-2 lg:mb-0">
+                {categories.map((category) => (
+                  <li key={category.id} className="mb-2 lg:mb-0">
                     <Button className="max-lg:w-full max-lg:justify-start" size="lg" variant="ghost" asChild>
-                      <Link href={item.url}>{item.label}</Link>
+                      <Link href={category.relPermalink}>{category.title}</Link>
                     </Button>
                   </li>
                 ))}
@@ -90,11 +82,11 @@ export function Menu() {
 
               {/* Mobile Menu */}
               <ul className={`-ml-3 lg:hidden ${isOpen ? "block" : "hidden"}`}>
-                {MENU_ITEMS.map((item) => (
-                  <li key={item.label} className="">
+                {categories.map((category) => (
+                  <li key={category.id} className="">
                     <Button className="max-lg:w-full max-lg:justify-start" size="lg" variant="ghost" asChild>
-                      <Link href={item.url} onClick={() => setIsOpen(false)}>
-                        {item.label}
+                      <Link href={category.relPermalink} onClick={() => setIsOpen(false)}>
+                        {category.title}
                       </Link>
                     </Button>
                   </li>

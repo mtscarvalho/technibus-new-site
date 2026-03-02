@@ -19,18 +19,9 @@ export const Posts: CollectionConfig = {
       autosave: true,
     },
   },
-  //   hooks: {
-  //     afterChange: [
-  //       ({ operation }) => {
-  //         if (operation === "update") {
-  //           revalidatePath("/", "layout");
-  //         }
-  //       },
-  //     ],
-  //   },
   fields: [
     slugField(),
-    relPermalinkField("/blog"),
+    relPermalinkField(),
     {
       type: "tabs",
       tabs: [

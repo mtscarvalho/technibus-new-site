@@ -71,6 +71,8 @@ export interface Config {
     posts: Post;
     media: Media;
     categories: Category;
+    latBusExibithors: LatBusExibithor;
+    latBusCategories: LatBusCategory;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,12 +82,17 @@ export interface Config {
     categories: {
       posts: 'posts';
     };
+    latBusCategories: {
+      exibithors: 'latBusExibithors';
+    };
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    latBusExibithors: LatBusExibithorsSelect<false> | LatBusExibithorsSelect<true>;
+    latBusCategories: LatBusCategoriesSelect<false> | LatBusCategoriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -183,6 +190,7 @@ export interface Post {
 export interface Category {
   id: number;
   slug?: string | null;
+  relPermalink: string;
   title: string;
   description?: string | null;
   posts?: {
@@ -214,6 +222,42 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "latBusExibithors".
+ */
+export interface LatBusExibithor {
+  id: number;
+  logo?: (number | null) | Media;
+  title: string;
+  description: string;
+  category: (number | LatBusCategory)[];
+  website: string;
+  contact: {
+    name: string;
+    email: string;
+    whatsapp: string;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "latBusCategories".
+ */
+export interface LatBusCategory {
+  id: number;
+  title: string;
+  exibithors?: {
+    docs?: (number | LatBusExibithor)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -254,6 +298,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'latBusExibithors';
+        value: number | LatBusExibithor;
+      } | null)
+    | ({
+        relationTo: 'latBusCategories';
+        value: number | LatBusCategory;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -359,9 +411,42 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   slug?: T;
+  relPermalink?: T;
   title?: T;
   description?: T;
   posts?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "latBusExibithors_select".
+ */
+export interface LatBusExibithorsSelect<T extends boolean = true> {
+  logo?: T;
+  title?: T;
+  description?: T;
+  category?: T;
+  website?: T;
+  contact?:
+    | T
+    | {
+        name?: T;
+        email?: T;
+        whatsapp?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "latBusCategories_select".
+ */
+export interface LatBusCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  exibithors?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

@@ -1,17 +1,15 @@
+import { isValidUrl } from "@/utilities/is-valid-url";
 import type { CollectionConfig } from "payload";
 
-import { relPermalinkField } from "@/fields/relpermalink";
-import { slugField } from "@/fields/slug";
-
-export const Posts: CollectionConfig = {
-  slug: "posts",
+export const LatBusExibithors: CollectionConfig = {
+  slug: "latBusExibithors",
   labels: {
-    singular: "Publicação",
-    plural: "Publicações",
+    singular: "Expositor",
+    plural: "Expositores",
   },
   admin: {
     useAsTitle: "title",
-    group: "Conteúdo",
+    group: "LatBus",
     preview: ({ relPermalink }) => `${relPermalink}`,
   },
   versions: {
@@ -19,76 +17,67 @@ export const Posts: CollectionConfig = {
       autosave: true,
     },
   },
-  //   hooks: {
-  //     afterChange: [
-  //       ({ operation }) => {
-  //         if (operation === "update") {
-  //           revalidatePath("/", "layout");
-  //         }
-  //       },
-  //     ],
-  //   },
   fields: [
-    slugField(),
-    relPermalinkField("/blog"),
     {
-      type: "tabs",
-      tabs: [
+      name: "logo",
+      label: "Logo",
+      type: "upload",
+      relationTo: "media",
+    },
+    {
+      name: "title",
+      label: "Nome ",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "description",
+      label: "Descrição",
+      type: "textarea",
+      required: true,
+    },
+    {
+      name: "category",
+      label: "Categoria",
+      type: "relationship",
+      relationTo: "latBusCategories",
+      required: true,
+      hasMany: true,
+    },
+    {
+      name: "website",
+      type: "text",
+      label: "Site",
+      required: true,
+      validate: (value: string | undefined | null) => {
+        if (value && !isValidUrl(value)) {
+          return "O link informado não é um URL válido. Verifique e tente novamente.";
+        }
+        return true;
+      },
+    },
+    {
+      name: "contact",
+      label: "Contato",
+      type: "group",
+      fields: [
         {
-          label: "Conteúdo",
-          fields: [
-            {
-              name: "author",
-              label: "Autor",
-              type: "relationship",
-              relationTo: "users",
-            },
-            {
-              name: "title",
-              label: "Título",
-              type: "text",
-              required: true,
-            },
-            {
-              name: "excerpt",
-              label: "Resumo",
-              type: "text",
-              required: true,
-            },
-            {
-              name: "category",
-              label: "Categoria",
-              type: "relationship",
-              relationTo: "categories",
-              required: true,
-              hasMany: true,
-            },
-            {
-              name: "image",
-              label: "Imagem",
-              type: "upload",
-              relationTo: "media",
-            },
-            {
-              name: "publishedDate",
-              label: "Data de publicação",
-              type: "date",
-              required: true,
-              defaultValue: () => new Date().toISOString(),
-              admin: {
-                date: {
-                  pickerAppearance: "dayOnly",
-                  displayFormat: "dd/MM/yyyy",
-                },
-              },
-            },
-            {
-              name: "content",
-              label: "Conteúdo",
-              type: "richText",
-              required: true,
-            },
-          ],
+          name: "name",
+          label: "Nome do representante",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "email",
+          label: "E-mail",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "whatsapp",
+          label: "WhatsApp",
+          type: "text",
+          required: true,
         },
       ],
     },

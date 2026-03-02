@@ -7,10 +7,9 @@ import { Category } from "@/payload-types";
 
 const payload = await getPayload({ config });
 
-export const fetchCategories = async (): Promise<Category[]> => {
+export const fetchAllCategories = async (): Promise<Category[]> => {
   const { isEnabled: draft } = await draftMode();
 
-  // Busca todas as categorias
   const { docs: categories } = await payload.find({
     collection: "categories",
     depth: 2,
@@ -21,7 +20,6 @@ export const fetchCategories = async (): Promise<Category[]> => {
     },
   });
 
-  // Filtra apenas as categorias que têm posts
   const filtered = categories.filter((category: Category) => {
     const posts = category?.posts?.docs ?? [];
     return posts.length > 0;

@@ -1,6 +1,8 @@
 import type { CollectionConfig } from "payload";
 
+import { relPermalinkField } from "@/fields/relpermalink";
 import { slugField } from "@/fields/slug";
+import { generateRelPeramlinkWithSlug } from "@/utilities/payload/generate-relpermalink";
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -17,17 +19,15 @@ export const Categories: CollectionConfig = {
       autosave: true,
     },
   },
-  //   hooks: {
-  //     afterChange: [
-  //       ({ operation }) => {
-  //         if (operation === "update") {
-  //           revalidatePath("/", "layout");
-  //         }
-  //       },
-  //     ],
-  //   },
   fields: [
     slugField(),
+    relPermalinkField({
+      overrides: {
+        hooks: {
+          beforeChange: [generateRelPeramlinkWithSlug("/editoria")],
+        },
+      },
+    }),
     {
       name: "title",
       label: "Título",
@@ -37,7 +37,7 @@ export const Categories: CollectionConfig = {
     {
       name: "description",
       label: "Descrição",
-      type: "text",
+      type: "textarea",
     },
     {
       label: "Publicações relacionadas",
