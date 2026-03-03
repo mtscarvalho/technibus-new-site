@@ -33,6 +33,8 @@ import { SpotifyEmbedBlock } from "./blocks/SpotifyEmbed";
 import { Categories } from "./collections/Categories/config";
 import { LatBusCategories } from "./collections/LatBusCategories/config";
 import { LatBusExibithors } from "./collections/LatBusExibithors/config";
+import { Tags } from "./collections/Tags/config";
+import { Topbar } from "./globals/Topbar/config";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -108,7 +110,8 @@ export default buildConfig({
       }),
     ],
   }),
-  collections: [Users, Posts, Media, Categories, LatBusExibithors, LatBusCategories],
+  collections: [Users, Posts, Media, Categories, Tags, LatBusExibithors, LatBusCategories],
+  globals: [Topbar],
   secret: process.env.PAYLOAD_SECRET || "",
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || "" },

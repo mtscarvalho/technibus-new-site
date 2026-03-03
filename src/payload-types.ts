@@ -71,6 +71,7 @@ export interface Config {
     posts: Post;
     media: Media;
     categories: Category;
+    tags: Tag;
     latBusExibithors: LatBusExibithor;
     latBusCategories: LatBusCategory;
     'payload-kv': PayloadKv;
@@ -82,6 +83,9 @@ export interface Config {
     categories: {
       posts: 'posts';
     };
+    tags: {
+      posts: 'posts';
+    };
     latBusCategories: {
       exibithors: 'latBusExibithors';
     };
@@ -91,6 +95,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     latBusExibithors: LatBusExibithorsSelect<false> | LatBusExibithorsSelect<true>;
     latBusCategories: LatBusCategoriesSelect<false> | LatBusCategoriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -102,8 +107,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    topbar: Topbar;
+  };
+  globalsSelect: {
+    topbar: TopbarSelect<false> | TopbarSelect<true>;
+  };
   locale: null;
   user: User;
   jobs: {
@@ -136,7 +145,6 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   name?: string | null;
-  role?: string | null;
   bio?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -156,11 +164,12 @@ export interface User {
  */
 export interface Post {
   id: number;
-  slug?: string | null;
   relPermalink: string;
+  slug?: string | null;
   author?: (number | null) | User;
   title: string;
   excerpt: string;
+  tag?: (number | Tag)[] | null;
   category: (number | Category)[];
   image?: (number | null) | Media;
   publishedDate: string;
@@ -182,6 +191,22 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  slug?: string | null;
+  title: string;
+  posts?: {
+    docs?: (number | Post)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -237,7 +262,7 @@ export interface LatBusExibithor {
   contact: {
     name: string;
     email: string;
-    whatsapp: string;
+    whatsapp?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -300,6 +325,10 @@ export interface PayloadLockedDocument {
         value: number | Category;
       } | null)
     | ({
+        relationTo: 'tags';
+        value: number | Tag;
+      } | null)
+    | ({
         relationTo: 'latBusExibithors';
         value: number | LatBusExibithor;
       } | null)
@@ -355,7 +384,6 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  role?: T;
   bio?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -372,11 +400,12 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
-  slug?: T;
   relPermalink?: T;
+  slug?: T;
   author?: T;
   title?: T;
   excerpt?: T;
+  tag?: T;
   category?: T;
   image?: T;
   publishedDate?: T;
@@ -418,6 +447,17 @@ export interface CategoriesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  slug?: T;
+  title?: T;
+  posts?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -490,6 +530,44 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topbar".
+ */
+export interface Topbar {
+  id: number;
+  enable?: boolean | null;
+  countdownDate?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topbar_select".
+ */
+export interface TopbarSelect<T extends boolean = true> {
+  enable?: T;
+  countdownDate?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

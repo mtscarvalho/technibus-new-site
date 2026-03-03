@@ -12,11 +12,11 @@ export function SpotifyEmbed({ url }: SpotifyEmbedProps) {
     <iframe
       data-testid="embed-iframe"
       className="rounded-xl"
-      src={`https://open.spotify.com/embed/track/${id}?utm_source=generator`}
+      src={`https://open.spotify.com/embed/episode/${id}?utm_source=generator`}
       width="100%"
       height="352"
       frameBorder="0"
-      allowfullscreen=""
+      allowFullScreen=""
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       loading="lazy"
     ></iframe>

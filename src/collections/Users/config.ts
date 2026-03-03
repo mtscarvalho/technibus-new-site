@@ -18,11 +18,6 @@ export const Users: CollectionConfig = {
       label: "Nome",
     },
     {
-      type: "text",
-      label: "Cargo",
-      name: "role",
-    },
-    {
       type: "textarea",
       label: "Bioagrafia",
       name: "bio",

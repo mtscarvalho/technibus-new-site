@@ -1,3 +1,4 @@
+import { phoneNumberField } from "@/fields/phoneNumber/field";
 import { isValidUrl } from "@/utilities/is-valid-url";
 import type { CollectionConfig } from "payload";
 
@@ -73,12 +74,7 @@ export const LatBusExibithors: CollectionConfig = {
           type: "text",
           required: true,
         },
-        {
-          name: "whatsapp",
-          label: "WhatsApp",
-          type: "text",
-          required: true,
-        },
+        phoneNumberField("whatsapp", "WhatsApp"),
       ],
     },
   ],

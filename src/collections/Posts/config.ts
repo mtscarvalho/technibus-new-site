@@ -20,68 +20,74 @@ export const Posts: CollectionConfig = {
     },
   },
   fields: [
-    slugField(),
     relPermalinkField(),
+    slugField(),
     {
-      type: "tabs",
-      tabs: [
-        {
-          label: "Conteúdo",
-          fields: [
-            {
-              name: "author",
-              label: "Autor",
-              type: "relationship",
-              relationTo: "users",
-            },
-            {
-              name: "title",
-              label: "Título",
-              type: "text",
-              required: true,
-            },
-            {
-              name: "excerpt",
-              label: "Resumo",
-              type: "text",
-              required: true,
-            },
-            {
-              name: "category",
-              label: "Categoria",
-              type: "relationship",
-              relationTo: "categories",
-              required: true,
-              hasMany: true,
-            },
-            {
-              name: "image",
-              label: "Imagem",
-              type: "upload",
-              relationTo: "media",
-            },
-            {
-              name: "publishedDate",
-              label: "Data de publicação",
-              type: "date",
-              required: true,
-              defaultValue: () => new Date().toISOString(),
-              admin: {
-                date: {
-                  pickerAppearance: "dayOnly",
-                  displayFormat: "dd/MM/yyyy",
-                },
-              },
-            },
-            {
-              name: "content",
-              label: "Conteúdo",
-              type: "richText",
-              required: true,
-            },
-          ],
+      name: "author",
+      label: "Autor",
+      type: "relationship",
+      relationTo: "users",
+      admin: {
+        position: "sidebar",
+      },
+    },
+    {
+      name: "title",
+      label: "Título",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "excerpt",
+      label: "Resumo",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "tag",
+      label: "Tag(s)",
+      type: "relationship",
+      relationTo: "tags",
+      hasMany: true,
+      admin: {
+        position: "sidebar",
+      },
+    },
+    {
+      name: "category",
+      label: "Categoria",
+      type: "relationship",
+      relationTo: "categories",
+      required: true,
+      hasMany: true,
+      admin: {
+        position: "sidebar",
+      },
+    },
+    {
+      name: "image",
+      label: "Imagem",
+      type: "upload",
+      relationTo: "media",
+    },
+    {
+      name: "publishedDate",
+      label: "Data de publicação",
+      type: "date",
+      required: true,
+      defaultValue: () => new Date().toISOString(),
+      admin: {
+        date: {
+          pickerAppearance: "dayOnly",
+          displayFormat: "dd/MM/yyyy",
         },
-      ],
+      },
+    },
+    {
+      name: "content",
+      label: "Conteúdo",
+      type: "richText",
+      required: true,
     },
   ],
 };

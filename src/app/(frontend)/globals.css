@@ -494,8 +494,8 @@
     @apply fixed top-6 left-6 z-20 not-focus:sr-only;
   }
 
-  .payload-richtext {
-    /* @apply; */
+  .payload-richtext a {
+    @apply underline;
   }
 
   .payload-richtext > * + * {

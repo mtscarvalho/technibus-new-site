@@ -12,6 +12,7 @@ const buttonVariants = cva(
         primary: "bg-brand-primary text-on-brand-primary hover:bg-brand-primary-hover disabled:bg-disabled disabled:text-on-disabled",
         // destructive: "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline: "",
+        neutral: "bg-primary text-primary border border-primary hover:border-brand-tertiary text-brand-primary",
         // secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:text-on-brand-tertiary hover:bg-brand-tertiary-hover",
         subtle: "text-brand-primary hover:text-on-brand-tertiary",
@@ -33,16 +34,12 @@ const buttonVariants = cva(
   },
 );
 
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
-  }) {
+  };
+
+function Button({ className, variant, size, asChild = false, ...props }: ButtonProps) {
   const Comp = asChild ? Slot : "button";
 
   return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
