@@ -1,5 +1,3 @@
-"use client";
-
 type PaginationRangeProps = {
   currentPage: number;
   totalPages: number;
@@ -8,9 +6,10 @@ type PaginationRangeProps = {
 
 export function PaginationRange({ currentPage, totalPages, totalDocs }: PaginationRangeProps) {
   return (
-    <div className="">
+    <div className="text-secondary flex items-center justify-between max-sm:flex-col">
+      <p>{totalDocs} resultados encontrados</p>
       <p>
-        {totalDocs} resultados, Página {currentPage} de {totalPages}
+        Página {currentPage} de {totalPages}
       </p>
     </div>
   );

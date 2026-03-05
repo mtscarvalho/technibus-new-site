@@ -51,7 +51,7 @@ export function Countdown({ className, targetDate }: CountdownProps) {
       .padStart(2, "0")
       .split("")
       .map((digit, index) => (
-        <span className="bg-primary text-brand-primary flex h-8 w-6 items-center justify-center rounded-lg text-base" key={index}>
+        <span className="bg-primary text-brand-primary flex h-6 w-6 items-center justify-center rounded text-base" key={index}>
           {digit}
         </span>
       ));

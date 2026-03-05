@@ -7,7 +7,7 @@ import { PayloadImage } from "@/components/Payload/Image";
 
 const card = tv({
   slots: {
-    root: "group block h-full space-y-6 rounded-lg p-3 transition-all duration-300",
+    root: "group block h-full space-y-6 rounded-lg  transition-all duration-300",
     image: "rounded aspect-[16/9] object-cover",
     meta: "text-regal-blue-950 text-xs tracking-wider uppercase",
     title: "text-primary group-hover:text-brand-primary text-balance",

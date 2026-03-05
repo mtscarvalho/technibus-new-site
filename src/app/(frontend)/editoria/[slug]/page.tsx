@@ -41,11 +41,11 @@ export default async function Page({ params }: PageArgs) {
       </Head>
 
       <main>
-        <section className="relative z-0 min-w-0 pt-10 pb-24">
+        <section className="relative z-0 min-w-0 pt-6 pb-24 md:pt-10">
           <div className="container grid gap-10 lg:grid-cols-12">
             <div className="space-y-10 lg:col-span-9">
-              <div className="space-y-3">
-                <h2 className="text-brand-primary border-secondary subheading border-b pb-3">{category.title}</h2>
+              <div className="space-y-6">
+                <h2 className="text-brand-primary border-secondary subheading border-b pb-3 max-sm:text-center">{category.title}</h2>
                 <PaginationRange currentPage={posts.page || 1} totalPages={posts.totalPages} totalDocs={posts.totalDocs} />
                 <div className="grid auto-rows-min gap-3 sm:grid-cols-2 md:grid-cols-3">
                   {posts.docs.map((post) => (

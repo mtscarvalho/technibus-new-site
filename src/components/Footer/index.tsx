@@ -36,7 +36,7 @@ export async function Footer() {
 
   return (
     <footer>
-      <div className="bg-secondary py-24">
+      <div className="bg-secondary border-secondary border-y py-24">
         <div className="container grid gap-8 lg:grid-cols-3">
           <div className="space-y-8">
             <Image src="/logo-otm-editora-positive.svg" alt="OTM Editora" width={113} height={68} />

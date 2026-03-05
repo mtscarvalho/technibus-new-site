@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
+import { NewsletterDialogProvider } from "@/providers/newsletter-dialog";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,10 +30,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.variable} antialiased`}>
-        <Header />
-        {children}
-        {process.env.NEXT_PUBLIC_ENV === "production" && <GoogleTagManager gtmId="GTM-" />}
-        <Footer />
+        <NewsletterDialogProvider>
+          <Header />
+          {children}
+          {process.env.NEXT_PUBLIC_ENV === "production" && <GoogleTagManager gtmId="GTM-" />}
+          <Footer />
+        </NewsletterDialogProvider>
       </body>
     </html>
   );
