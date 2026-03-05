@@ -9,8 +9,8 @@ export async function MostRead() {
       <h2 className="text-brand-primary border-secondary max-md:subheading mb-8 border-b pt-3 pb-3 text-xl font-medium">Mais lidos</h2>
       <ol className="space-y-2">
         {posts.map((post, index) => (
-          <div className="flex" key={index}>
-            {index + 1}
+          <div className="flex gap-2" key={index}>
+            <span className="pt-2 font-semibold">{index + 1}.</span>
             <Card {...post} disable={{ image: true, excerpt: true }} key={post.id} size="sm" />
           </div>
         ))}

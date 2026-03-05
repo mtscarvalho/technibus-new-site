@@ -501,7 +501,7 @@
   } */
 
   body {
-    @apply bg-secondary text-primary;
+    @apply bg-primary text-primary;
   }
 }
 

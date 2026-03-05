@@ -1,47 +1,219 @@
 import Link from "next/link";
 
-// import { fetchSocials } from "@/globals/Social/data";
-
 import { fetchAllCategories } from "@/collections/Categories/data";
 import { Button } from "@/components/Button";
+import Image from "next/image";
 
-const OTMEDITORA_MENU = [
-  { title: "OTM Editora", relPermalink: "/" },
-  { title: "OTM Inteligência", relPermalink: "/" },
-  { title: "OTM Acervo Digital", relPermalink: "/" },
-  { title: "Transporte Moderno", relPermalink: "/" },
-  { title: "Contato", relPermalink: "/" },
+const MENU_TECHNIBUS = [
+  { label: "Anuncie", url: "https://otmeditora.com/publicidade/technibus" },
+  { label: "Canal no WhatsApp", url: "/" },
+  { label: "Fale com a redação", url: "mailto:otmeditora@otmeditora.com" },
+  { label: "Newsletter", url: "/" },
+  { label: "Revistas Technibus", url: "https://acervodigitalotm.com.br/todas-publicacoes?page=1&publication=Technibus" },
+];
+
+const MENU_SOCIAL = [
+  { label: "Facebook", url: "https://www.facebook.com/otmeditora" },
+  { label: "Instagram (OTM Editora)", url: "https://www.instagram.com/otmeditora/" },
+  { label: "Instagram (Transporte Moderno)", url: "https://www.instagram.com/transportemodernooficial/" },
+  { label: "Linkedin", url: "https://www.linkedin.com/in/otm-editora-a23367a5/" },
+  { label: "Spotify", url: "https://open.spotify.com/show/7301YGnaZ08ViGvWoc8RBd" },
+  { label: "Canal no WhatsApp", url: "/" },
+  { label: "Youtube (OTM Editora)", url: "https://www.youtube.com/@otmeditora" },
+  { label: "Youtube (Videocast)", url: "https://www.youtube.com/@videocasttransportemoderno" },
+];
+
+const MENU_OTMEDITORA = [
+  { label: "OTM Editora", url: "https://otmeditora.com/" },
+  { label: "OTM Inteligência", url: "https://otminteligencia.com.br/" },
+  { label: "OTM Acervo Digital", url: "https://acervodigitalotm.com.br/" },
+  { label: "Transporte Moderno", url: "https://transportemoderno.com.br/" },
+  { label: "Eventos", url: "https://otmeditora.com/eventos" },
 ];
 
 export async function Footer() {
   const categories = await fetchAllCategories();
 
   return (
-    <footer className="bg-primary text-primary py-12" data-theme="dark">
-      <div className="container grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-4 lg:col-span-3">
-          <h2 className="border-primary text-primary border-b pb-3 font-semibold">Editorias</h2>
-          <ul className="-ml-3 columns-2">
-            {categories.map((category) => (
-              <li key={category.id}>
-                <Button variant="ghost">
-                  <Link href={category.relPermalink}>{category.title}</Link>
-                </Button>
-              </li>
-            ))}
-          </ul>
+    <footer>
+      <div className="bg-secondary py-24">
+        <div className="container grid gap-8 lg:grid-cols-3">
+          <div className="space-y-8">
+            <Image src="/logo-otm-editora-positive.svg" alt="OTM Editora" width={113} height={68} />
+            <div className="space-y-3">
+              <h2 className="font-semibold">Redação, Administração, Publicidade e Correspondência:</h2>
+              <p>Av. Vereador José Diniz, 3300, 7° andar, cj. 707, Campo Belo. CEP 04604-006 – São Paulo / SP</p>
+              <p>
+                <a className="text-brand-primary underline" href="tel:+551150968104">
+                  Tel. (11) 5096-8104 (sequencial)
+                </a>
+                <br />
+                <a className="text-brand-primary underline" href="mailto:otmeditora@otmeditora.com">
+                  otmeditora@otmeditora.com
+                </a>
+              </p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">CEO</h2>
+              <p>
+                Marcelo Ricardo Fontana <br />
+                <a className="text-brand-primary underline" href="mailto:marcelofontana@otmeditora.com">
+                  marcelofontana@otmeditora.com
+                </a>
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Editora</h2>
+              <p>
+                Márcia Pinna Raspanti <br />
+                <a className="text-brand-primary underline" href="mailto:marciapinna@otmeditora.com">
+                  marciapinna@otmeditora.com
+                </a>
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Colaboradores</h2>
+              <p>Alexandre Asquini</p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Executivo de contas</h2>
+              <p>
+                Tânia Nascimento <br />
+                <a className="text-brand-primary underline" href="mailto:tanianascimento@otmeditora.com">
+                  tanianascimento@otmeditora.com
+                </a>
+              </p>
+              <p>
+                Raul Urrutia <br />
+                <a className="text-brand-primary underline" href="mailto:raulurrutia@otmeditora.com">
+                  raulurrutia@otmeditora.com
+                </a>
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Financeiro</h2>
+              <p>
+                Vidal Rodrigues <br />
+                <a className="text-brand-primary underline" href="mailto:vidalrodrigues@otmeditora.com">
+                  vidalrodrigues@otmeditora.com
+                </a>
+              </p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Eventos corporativos / Marketing</h2>
+              <p>
+                Barbara Chelen <br />
+                <a className="text-brand-primary underline" href="mailto:barbaraghelen@otmeditora.com">
+                  barbaraghelen@otmeditora.com
+                </a>
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Publicidade</h2>
+              <p>
+                Karoline Jones <br />
+                <a className="text-brand-primary underline" href="mailto:karolinejones@otmeditora.com">
+                  karolinejones@otmeditora.com
+                </a>
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Redes sociais</h2>
+              <p>Aline Feltrin e Márcia Pinna Raspanti</p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Design gráfico e editoração</h2>
+              <p>
+                <a className="text-brand-primary underline" href="https://www.instagram.com/awdesign_____/">
+                  aw I branding & design
+                </a>
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h2 className="border-secondary border-b pb-2 font-semibold">Representante região Sul (PR/RS/SC)</h2>
+              <p>
+                Gilberto A. Paulin <br />
+                <a className="text-brand-primary underline" href="tel:+554130290563">
+                  Tel.: (41) 3029-0563
+                </a>
+              </p>
+              <p>
+                João Batista A. Silva <br />
+                <a className="text-brand-primary underline" href="mailto:joaobatistaasilva@gmail.com">
+                  joaobatistaasilva@gmail.com
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="col-span-1 space-y-4">
-          <h2 className="border-primary text-primary border-b pb-3 font-semibold">OTM Editora</h2>
-          <ul className="-ml-3">
-            {OTMEDITORA_MENU.map((category) => (
-              <li key={category.title}>
-                <Button variant="ghost">
-                  <Link href={category.relPermalink}>{category.title}</Link>
-                </Button>
-              </li>
-            ))}
-          </ul>
+      </div>
+
+      <div className="bg-primary text-primary py-12" data-theme="dark">
+        <div className="container space-y-10">
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+            <div className="space-y-4">
+              <h2 className="border-primary text-primary border-b pb-3 font-semibold">Editorias</h2>
+              <ul className="-ml-3">
+                {categories.map((category) => (
+                  <li key={category.id}>
+                    <Button variant="ghost">
+                      <Link href={category.relPermalink}>{category.title}</Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-1 space-y-4">
+              <h2 className="border-primary text-primary border-b pb-3 font-semibold">OTM Editora</h2>
+              <ul className="-ml-3">
+                {MENU_TECHNIBUS.map((item) => (
+                  <li key={item.label}>
+                    <Button variant="ghost">
+                      <Link href={item.url}>{item.label}</Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-1 space-y-4">
+              <h2 className="border-primary text-primary border-b pb-3 font-semibold">OTM Editora</h2>
+              <ul className="-ml-3">
+                {MENU_OTMEDITORA.map((item) => (
+                  <li key={item.label}>
+                    <Button variant="ghost">
+                      <Link href={item.url}>{item.label}</Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-1 space-y-4">
+              <h2 className="border-primary text-primary border-b pb-3 font-semibold">OTM Editora</h2>
+              <ul className="-ml-3">
+                {MENU_SOCIAL.map((item) => (
+                  <li key={item.label}>
+                    <Button variant="ghost">
+                      <Link href={item.url}>{item.label}</Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="grid items-center gap-y-6 md:grid-cols-2">
+            <Image src="/logo-otm-editora-negative.svg" alt="OTM Editora" width={114} height={64} />
+            <div>
+              <p className="text-secondary max-w-[70ch] text-sm text-balance">
+                @2026 OTM Editora. Todos os direitos reservados. <br />É proibida a reprodução do conteúdo desta página em qualquer meio de comunicação, eletrônico ou impresso, sem
+                autorização escrita da OTM Editora.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

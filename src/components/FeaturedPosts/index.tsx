@@ -39,11 +39,11 @@ export function FeaturedPosts({ posts }: FeaturedPostsProps) {
   };
 
   return (
-    <div className="bg-secondary flex flex-col overflow-hidden rounded-lg">
+    <div className="bg-primary flex flex-col overflow-hidden rounded-lg">
       <div className="relative">
         <Swiper {...swiperOptions}>
           {posts?.map((post) => (
-            <SwiperSlide className="bg-secondary h-auto!" key={post.id}>
+            <SwiperSlide className="bg-primary h-auto!" key={post.id}>
               <Card {...post} size="lg" />
             </SwiperSlide>
           ))}

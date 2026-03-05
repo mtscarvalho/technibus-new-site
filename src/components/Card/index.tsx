@@ -7,10 +7,10 @@ import { PayloadImage } from "@/components/Payload/Image";
 
 const card = tv({
   slots: {
-    root: "group block h-full space-y-6 rounded-lg p-3 transition-all duration-300 hover:bg-primary hover:shadow-lg",
+    root: "group block h-full space-y-6 rounded-lg p-3 transition-all duration-300",
     image: "rounded aspect-[16/9] object-cover",
     meta: "text-regal-blue-950 text-xs tracking-wider uppercase",
-    title: "text-primary text-balance",
+    title: "text-primary group-hover:text-brand-primary text-balance",
     description: "text-secondary line-clamp-3 text-sm",
   },
   variants: {
@@ -39,7 +39,11 @@ export function Card({ category, title, excerpt, image, relPermalink, size, disa
 
   return (
     <Link href={relPermalink} className={slot.root()}>
-      {!disable?.image && <PayloadImage className={slot.image()} image={image as Media} disableCaption />}
+      {!disable?.image && (
+        <div className="border-secondary bg-secondary relative aspect-[16/9] overflow-hidden rounded border">
+          <PayloadImage className="absolute size-full object-cover transition-transform duration-300 group-hover:scale-105" image={image as Media} disableCaption />
+        </div>
+      )}
       <div className="space-y-4">
         <div className="space-y-2">
           <p className={slot.meta()}>{category?.length ? category.map((category) => (category as Category).title).join(", ") : null}</p>
