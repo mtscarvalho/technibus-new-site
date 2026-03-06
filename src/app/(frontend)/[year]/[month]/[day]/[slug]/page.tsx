@@ -6,9 +6,10 @@ import { createMetadata } from "@/utilities/create-metadata";
 import { generateMetaDescription } from "@/utilities/generate-meta-description";
 
 import { fetchPostBySlug } from "@/collections/Posts/data";
-import { MostRead } from "@/components/MostRead";
+import { Ads } from "@/components/Ads";
 import { PayloadImage } from "@/components/Payload/Image";
 import { RichText } from "@/components/RichText";
+import { Sidebar } from "@/components/Sidebar";
 import { Facebook, LinkedIn, Threads, WhatsApp, X } from "@/components/SocialIcon";
 
 type PageArgs = {
@@ -41,8 +42,8 @@ export default async function Page({ params }: PageArgs) {
     <main>
       <article className="pt-4 pb-24">
         <div className="container space-y-16">
-          <div className="grid gap-10 lg:grid-cols-12">
-            <div className="space-y-8 lg:col-span-9">
+          <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
+            <div className="space-y-8">
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <p className="uppertitle">
@@ -101,11 +102,14 @@ export default async function Page({ params }: PageArgs) {
                 </ul>
               </div>
               {post.image && <PayloadImage className="border-secondary bg-secondary w-full rounded-md border" image={post.image as Media} />}
+              <div className="grid gap-8 sm:grid-cols-2 lg:hidden">
+                <Ads position="sidebar-top" />
+                <Ads position="sidebar-middle" />
+              </div>
               {post.content && <RichText data={post.content} />}
+              <Ads className="lg:hidden" position="sidebar-bottom-premium" />
             </div>
-            <div className="lg:col-span-3">
-              <MostRead />
-            </div>
+            <Sidebar />
           </div>
         </div>
       </article>

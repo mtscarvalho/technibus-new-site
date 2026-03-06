@@ -1,14 +1,14 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { fetchAllCategories } from "@/collections/Categories/data";
 import { Button } from "@/components/Button";
-import Image from "next/image";
+import { NewsletterDialogButton } from "@/providers/newsletter-dialog";
 
 const MENU_TECHNIBUS = [
-  { label: "Anuncie", url: "https://otmeditora.com/publicidade/technibus" },
   { label: "Canal no WhatsApp", url: "https://whatsapp.com/channel/0029VatKJymGufIo6ZNsYt2H" },
+  { label: "Anuncie", url: "https://otmeditora.com/publicidade/technibus" },
   { label: "Fale com a redação", url: "mailto:otmeditora@otmeditora.com" },
-  { label: "Newsletter", url: "/" },
   { label: "Revistas Technibus", url: "https://acervodigitalotm.com.br/todas-publicacoes?page=1&publication=Technibus" },
 ];
 
@@ -161,19 +161,26 @@ export async function Footer() {
                 {categories.map((category) => (
                   <li key={category.id}>
                     <Button variant="ghost">
-                      <Link href={category.relPermalink}>{category.title}</Link>
+                      <Link href={category.relPermalink} rel="noopener" target="_blank">
+                        {category.title}
+                      </Link>
                     </Button>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="col-span-1 space-y-4">
-              <h2 className="border-primary text-primary border-b pb-3 font-semibold">OTM Editora</h2>
+              <h2 className="border-primary text-primary border-b pb-3 font-semibold">Technibus</h2>
               <ul className="-ml-3">
+                <li>
+                  <NewsletterDialogButton variant="ghost">Newsletter</NewsletterDialogButton>
+                </li>
                 {MENU_TECHNIBUS.map((item) => (
                   <li key={item.label}>
                     <Button variant="ghost">
-                      <Link href={item.url}>{item.label}</Link>
+                      <Link href={item.url} rel="noopener" target="_blank">
+                        {item.label}
+                      </Link>
                     </Button>
                   </li>
                 ))}
@@ -185,7 +192,9 @@ export async function Footer() {
                 {MENU_OTMEDITORA.map((item) => (
                   <li key={item.label}>
                     <Button variant="ghost">
-                      <Link href={item.url}>{item.label}</Link>
+                      <Link href={item.url} rel="noopener" target="_blank">
+                        {item.label}
+                      </Link>
                     </Button>
                   </li>
                 ))}
@@ -197,7 +206,9 @@ export async function Footer() {
                 {MENU_SOCIAL.map((item) => (
                   <li key={item.label}>
                     <Button variant="ghost">
-                      <Link href={item.url}>{item.label}</Link>
+                      <Link href={item.url} rel="noopener" target="_blank">
+                        {item.label}
+                      </Link>
                     </Button>
                   </li>
                 ))}

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 
 import { Card } from "@/components/Card";
 import { Pagination } from "@/components/Pagination";
@@ -7,6 +7,7 @@ import { PaginationRange } from "@/components/PostRange";
 import { Sidebar } from "@/components/Sidebar";
 
 import { Post, Search } from "@/payload-types";
+import { Ads } from "../Ads";
 
 type PostArchiveProps = {
   children: ReactNode;
@@ -53,10 +54,15 @@ export function PostArchiveFeed({ posts, page, totalPages, path, query }: PostAr
   return (
     <>
       <PostGrid>
-        {posts.map((post) => (
-          <Card key={post.id} {...post} disable={{ excerpt: true }} size="sm" />
+        {posts.map((post, index) => (
+          <Fragment key={post.id}>
+            <Card {...post} disable={{ excerpt: true }} size="sm" />
+            {index === 2 && <Ads className="lg:hidden" position="sidebar-top" />}
+            {index === 6 && <Ads className="lg:hidden" position="sidebar-middle" />}
+          </Fragment>
         ))}
       </PostGrid>
+      <Ads className="lg:hidden" position="sidebar-bottom-premium" />
       <Pagination page={page} totalPages={totalPages} path={path} query={query} />
     </>
   );
