@@ -500,6 +500,11 @@
     @apply border-border font-inter outline-ring/50;
   } */
 
+  :focus,
+  :focus-visible {
+    @apply outline-brand-primary outline-2 outline-offset-1 outline-dashed;
+  }
+
   body {
     @apply bg-primary text-primary;
   }

@@ -76,7 +76,7 @@ export default async function Page({ params }: PageArgs) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <LinkedIn className="text-regal-blue-950 size-6" />
+                      <LinkedIn className="icon-brand-primary size-6" />
                     </Link>
                   </li>
                   <li>
@@ -85,7 +85,7 @@ export default async function Page({ params }: PageArgs) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Facebook className="text-regal-blue-950 size-6" />
+                      <Facebook className="icon-brand-primary size-6" />
                     </Link>
                   </li>
                   <li>
@@ -94,7 +94,7 @@ export default async function Page({ params }: PageArgs) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <X className="text-regal-blue-950 size-6" />
+                      <X className="icon-brand-primary size-6" />
                     </Link>
                   </li>
                   <li>
@@ -103,7 +103,7 @@ export default async function Page({ params }: PageArgs) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Threads className="text-regal-blue-950 size-6" />
+                      <Threads className="icon-brand-primary size-6" />
                     </Link>
                   </li>
                   <li>
@@ -112,7 +112,7 @@ export default async function Page({ params }: PageArgs) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <WhatsApp className="text-regal-blue-950 size-6" />
+                      <WhatsApp className="icon-brand-primary size-6" />
                     </Link>
                   </li>
                 </ul>
