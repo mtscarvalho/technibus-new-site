@@ -1,5 +1,4 @@
-import { Faq, Media, Post } from "@/payload-types";
-import { richTextToPlainText } from "@/utilities/richtext-to-plaintext";
+import { Media, Post } from "@/payload-types";
 
 export const articleSchema = (props: Post) => {
   return {
@@ -40,16 +39,3 @@ export const organizationSchema = () => {
     sameAs: ["", "", ""],
   };
 };
-
-export const faqSchema = (questions: Faq[]) => ({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: questions.map(({ title, content }) => ({
-    "@type": "Question",
-    name: title,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: richTextToPlainText(content),
-    },
-  })),
-});

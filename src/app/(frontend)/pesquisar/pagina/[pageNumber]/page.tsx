@@ -10,7 +10,9 @@ import { SectionHeading, SectionHeadingTitle } from "@/components/TitleWithDivid
 
 type PageArgs = {
   params: Promise<{ pageNumber: string }>;
-  searchParams: Promise<{ s?: string }> | { s?: string };
+  searchParams: Promise<{
+    s: string;
+  }>;
 };
 
 export async function generateMetadata({ params, searchParams }: PageArgs) {

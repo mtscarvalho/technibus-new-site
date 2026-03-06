@@ -8,7 +8,9 @@ import { SearchForm } from "@/components/SearchForm";
 import { SectionHeading, SectionHeadingTitle } from "@/components/TitleWithDivider";
 
 type PageArgs = {
-  searchParams: Promise<{ s?: string }> | { s?: string };
+  searchParams: Promise<{
+    s: string;
+  }>;
 };
 
 export async function generateMetadata({ searchParams }: PageArgs) {

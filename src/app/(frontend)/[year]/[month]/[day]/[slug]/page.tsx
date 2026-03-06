@@ -71,18 +71,26 @@ export default async function Page({ params }: PageArgs) {
                 </p>
                 <ul className="flex gap-4">
                   <li>
-                    <Link href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(!post.permalink)}`} target="_blank" rel="noopener noreferrer">
+                    <Link
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(process.env.SITE_URL! + post.relPermalink)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <LinkedIn className="text-regal-blue-950 size-6" />
                     </Link>
                   </li>
                   <li>
-                    <Link href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(!post.permalink)}`} target="_blank" rel="noopener noreferrer">
+                    <Link
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(process.env.SITE_URL! + post.relPermalink)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Facebook className="text-regal-blue-950 size-6" />
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href={`https://x.com/intent/tweet?url=${encodeURIComponent(!post.permalink)}&text=${encodeURIComponent(post.title)}`}
+                      href={`https://x.com/intent/tweet?url=${encodeURIComponent(process.env.SITE_URL! + post.relPermalink)}&text=${encodeURIComponent(post.title)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -90,12 +98,20 @@ export default async function Page({ params }: PageArgs) {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`https://www.threads.net/intent/post?text=${encodeURIComponent(post.title + " " + !post.permalink)}`} target="_blank" rel="noopener noreferrer">
+                    <Link
+                      href={`https://www.threads.net/intent/post?text=${encodeURIComponent(post.title + " " + process.env.SITE_URL! + post.relPermalink)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Threads className="text-regal-blue-950 size-6" />
                     </Link>
                   </li>
                   <li>
-                    <Link href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + " " + !post.permalink)}`} target="_blank" rel="noopener noreferrer">
+                    <Link
+                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + " " + process.env.SITE_URL! + post.relPermalink)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <WhatsApp className="text-regal-blue-950 size-6" />
                     </Link>
                   </li>
