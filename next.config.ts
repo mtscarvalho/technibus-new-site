@@ -2,9 +2,12 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    turbopack: {},
-    productionBrowserSourceMaps: true,
-    poweredByHeader: false,
+  turbopack: {},
+  productionBrowserSourceMaps: true,
+  poweredByHeader: false,
+  images: {
+    remotePatterns: [new URL("https://acervodigitalotm.com.br/**")],
+  },
   async headers() {
     return [
       {
