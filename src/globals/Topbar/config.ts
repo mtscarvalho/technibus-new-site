@@ -1,3 +1,4 @@
+import { color as colorField } from "@/fields/color";
 import { simpleRichTextField } from "@/fields/simple-rich-text";
 import { GlobalConfig } from "payload";
 
@@ -34,6 +35,32 @@ export const Topbar: GlobalConfig = {
             required: false,
           },
         }),
+      ],
+    },
+    {
+      type: "group",
+      label: "Estilos",
+      fields: [
+        colorField({
+          name: "backgroundColor",
+          label: "Cor do fundo",
+        }),
+        {
+          type: "select",
+          label: "Cor do conteúdo",
+          name: "theme",
+          required: true,
+          options: [
+            {
+              label: "Escuro",
+              value: "light",
+            },
+            {
+              label: "Claro",
+              value: "Dark",
+            },
+          ],
+        },
       ],
     },
   ],

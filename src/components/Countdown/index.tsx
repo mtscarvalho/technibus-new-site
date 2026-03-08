@@ -51,14 +51,14 @@ export function Countdown({ className, targetDate }: CountdownProps) {
       .padStart(2, "0")
       .split("")
       .map((digit, index) => (
-        <span className="bg-primary text-brand-primary flex h-6 w-6 items-center justify-center rounded text-base" key={index}>
+        <span className="bg-brand-primary text-on-brand-primary flex h-6 w-6 items-center justify-center rounded text-base" key={index}>
           {digit}
         </span>
       ));
   };
 
   return (
-    <div className={cn("flex items-baseline justify-center space-x-2 rounded-lg text-white", className)}>
+    <div className={cn("text-primary flex items-baseline justify-center space-x-2 rounded-lg", className)}>
       <div className="flex items-center gap-2 max-lg:flex-col">
         <div className="flex space-x-1">{splitDigits(timeLeft.days)}</div>
         <p className="text-sm">dias</p>

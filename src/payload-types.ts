@@ -619,6 +619,8 @@ export interface Topbar {
     };
     [k: string]: unknown;
   } | null;
+  backgroundColor: string;
+  theme: 'light' | 'Dark';
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -630,6 +632,8 @@ export interface TopbarSelect<T extends boolean = true> {
   enable?: T;
   countdownDate?: T;
   content?: T;
+  backgroundColor?: T;
+  theme?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
