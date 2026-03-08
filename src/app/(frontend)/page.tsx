@@ -47,6 +47,7 @@ export default async function Page() {
         <div className="container">
           <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
             <div className="space-y-10">
+              {/* Featured */}
               <div className="space-y-3">
                 <PostGrid variant="none" className="lg:grid-cols-12">
                   <div className="min-w-0 lg:col-span-8">
@@ -59,9 +60,11 @@ export default async function Page() {
                   </div>
                 </PostGrid>
               </div>
-              <div className="space-y-6">
-                <SectionHeading>
-                  <SectionHeadingTitle size="lg">Lat.bus</SectionHeadingTitle>
+
+              {/* Lat.Bus */}
+              <div className="bg-brand-tertiary space-y-6 rounded-xl p-6 md:p-8">
+                <SectionHeading className="border-brand-tertiary">
+                  <SectionHeadingTitle size="lg">Lat.Bus</SectionHeadingTitle>
                   <SectionHeadingActions>
                     <Button size="sm" asChild>
                       <Link href="https://acervodigitalotm.com.br/" target="_blank" rel="noopener">
@@ -79,10 +82,29 @@ export default async function Page() {
                   ))}
                 </PostGrid>
               </div>
+
+              {/* Ads */}
               <PostGrid className="lg:hidden" variant="2-cols">
                 <Ads className="lg:hidden" position="sidebar-top" />
                 <Ads className="max-md:hidden lg:hidden" position="sidebar-middle" />
               </PostGrid>
+
+              {/* Latest */}
+              <div className="space-y-6">
+                <SectionHeading>
+                  <SectionHeadingTitle size="lg">Últimas publicações</SectionHeadingTitle>
+                </SectionHeading>
+                <PostGrid>
+                  {latestPosts.map((post) => (
+                    <Card disable={{ excerpt: true }} {...post} key={post.id} size="sm" />
+                  ))}
+                </PostGrid>
+              </div>
+
+              {/* Ads */}
+              <Ads className="md:hidden" position="sidebar-middle" />
+
+              {/* Specials */}
               <PostGrid variant="2-cols">
                 <div className="space-y-6">
                   <SectionHeading>
@@ -101,17 +123,8 @@ export default async function Page() {
                   ))}
                 </div>
               </PostGrid>
-              <Ads className="md:hidden" position="sidebar-middle" />
-              <div className="space-y-6">
-                <SectionHeading>
-                  <SectionHeadingTitle size="lg">Últimas publicações</SectionHeadingTitle>
-                </SectionHeading>
-                <PostGrid>
-                  {latestPosts.map((post) => (
-                    <Card disable={{ excerpt: true }} {...post} key={post.id} size="sm" />
-                  ))}
-                </PostGrid>
-              </div>
+
+              {/* Ads */}
               <Ads className="lg:hidden" position="sidebar-bottom-premium" />
             </div>
             <Sidebar />

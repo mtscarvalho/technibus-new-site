@@ -14,7 +14,7 @@ export async function SectionLatbus() {
     <section className="bg-secondary border-secondary border-y py-24">
       <div className="container space-y-6">
         <SectionHeading>
-          <SectionHeadingTitle size="lg">Lat.bus</SectionHeadingTitle>
+          <SectionHeadingTitle size="lg">Lat.Bus</SectionHeadingTitle>
           <SectionHeadingActions>
             <Button size="sm" asChild>
               <Link href="https://acervodigitalotm.com.br/" target="_blank" rel="noopener">
