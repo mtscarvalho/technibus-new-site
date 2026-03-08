@@ -1,6 +1,6 @@
 import { Fragment, ReactNode } from "react";
 
-import { Card } from "@/components/Card";
+import { Card, CardProps } from "@/components/Card";
 import { Pagination } from "@/components/Pagination";
 import { PostGrid } from "@/components/PostGrid";
 import { PaginationRange } from "@/components/PostRange";
@@ -26,6 +26,7 @@ type PostArchiveFeedProps = {
   totalPages: number;
   path: string;
   query?: string;
+  cardDisable?: Partial<CardProps["disable"]>;
 };
 
 export function PostArchive({ children }: PostArchiveProps) {
@@ -50,13 +51,13 @@ export function PostArchiveHeader({ children, currentPage, totalPages, totalDocs
   );
 }
 
-export function PostArchiveFeed({ posts, page, totalPages, path, query }: PostArchiveFeedProps) {
+export function PostArchiveFeed({ posts, page, totalPages, path, query, cardDisable = { excerpt: true } }: PostArchiveFeedProps) {
   return (
     <>
       <PostGrid>
         {posts.map((post, index) => (
           <Fragment key={post.id}>
-            <Card {...post} disable={{ excerpt: true }} size="sm" />
+            <Card {...post} disable={cardDisable} size="sm" />
             {index === 2 && <Ads className="lg:hidden" position="sidebar-top" />}
             {index === 6 && <Ads className="lg:hidden" position="sidebar-middle" />}
           </Fragment>

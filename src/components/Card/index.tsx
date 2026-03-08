@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const card = tv({
   slots: {
-    root: "group block h-full space-y-6 rounded-lg relative transition-all duration-300",
+    root: "group block h-full space-y-6 relative transition-all duration-300",
     image: "rounded aspect-[16/10] object-cover",
     meta: "text-brand-primary relative text-xs z-10 tracking-wider uppercase",
     title: "text-primary group-hover:text-brand-primary text-balance",
@@ -25,15 +25,16 @@ const card = tv({
 
 type CardVariants = VariantProps<typeof card>;
 
-type CardProps = {
+export type CardProps = {
   disable?: {
     image?: boolean;
     excerpt?: boolean;
+    category?: boolean;
   };
 } & (Post | Search) &
   CardVariants;
 
-export function Card({ category, title, excerpt, image, relPermalink, size, disable = { image: false, excerpt: false } }: CardProps) {
+export function Card({ category, title, excerpt, image, relPermalink, size, hat, disable = { image: false, excerpt: false, category: false } }: CardProps) {
   const slot = card({ size });
 
   return (
@@ -45,24 +46,29 @@ export function Card({ category, title, excerpt, image, relPermalink, size, disa
       )}
       <div className="space-y-4">
         <div className="space-y-2">
-          <p className={slot.meta()}>
-            {category?.length
-              ? category.map((cat, index) => {
-                  const c = cat as Category;
-                  return (
-                    <span key={c.id}>
-                      <Link href={c.relPermalink}>{c.title}</Link>
-                      {index < category.length - 1 && ", "}
-                    </span>
-                  );
-                })
-              : null}
-          </p>
+          <p className={slot.meta()}>{hat ? hat : (category[0] as Category).title}</p>
           <h2 className={slot.title()}>{title}</h2>
+          {!disable?.category && (
+            <ul className="relative z-10 flex flex-wrap gap-2">
+              {category.map((cat) => {
+                const c = cat as Category;
+                return (
+                  <li key={c.id}>
+                    <Link
+                      className="border-secondary bg-primary hover:bg-secondary block rounded-lg border px-2 py-0.5 text-sm transition-colors duration-300"
+                      href={c.relPermalink}
+                    >
+                      {c.title}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
         {!disable?.excerpt && <p className={slot.description()}>{excerpt}</p>}
       </div>
-      <Link className="absolute inset-0 size-full rounded-lg" href={relPermalink}>
+      <Link className="absolute inset-0 size-full rounded" href={relPermalink}>
         <span className="sr-only">Ler matéria {title}</span>
       </Link>
     </article>

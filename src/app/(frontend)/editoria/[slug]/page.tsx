@@ -51,7 +51,7 @@ export default async function Page({ params }: PageArgs) {
               </SectionHeadingTitle>
             </SectionHeading>
           </PostArchiveHeader>
-          <PostArchiveFeed posts={posts.docs} page={posts.page} totalPages={posts.totalPages} path={category.relPermalink} />
+          <PostArchiveFeed cardDisable={{ excerpt: true, category: true }} posts={posts.docs} page={posts.page} totalPages={posts.totalPages} path={category.relPermalink} />
         </PostArchive>
       </main>
     </>

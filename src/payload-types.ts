@@ -204,6 +204,7 @@ export interface Post {
   author?: (number | null) | User;
   title: string;
   excerpt: string;
+  hat?: string | null;
   tag?: (number | Tag)[] | null;
   category: (number | Category)[];
   image?: (number | null) | Media;
@@ -314,6 +315,7 @@ export interface Search {
   };
   relPermalink: string;
   category: (number | Category)[];
+  hat?: string | null;
   image?: (number | null) | Media;
   author?: (number | null) | User;
   content?: string | null;
@@ -452,6 +454,7 @@ export interface PostsSelect<T extends boolean = true> {
   author?: T;
   title?: T;
   excerpt?: T;
+  hat?: T;
   tag?: T;
   category?: T;
   image?: T;
@@ -548,6 +551,7 @@ export interface SearchSelect<T extends boolean = true> {
   doc?: T;
   relPermalink?: T;
   category?: T;
+  hat?: T;
   image?: T;
   author?: T;
   content?: T;

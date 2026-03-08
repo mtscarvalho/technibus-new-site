@@ -44,6 +44,11 @@ export const Posts: CollectionConfig = {
       required: true,
     },
     {
+      name: "hat",
+      label: "Chapéu",
+      type: "text",
+    },
+    {
       name: "tag",
       label: "Tag(s)",
       type: "relationship",
