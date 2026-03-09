@@ -6,31 +6,30 @@ import { Button } from "@/components/Button";
 import { NewsletterDialogButton } from "@/providers/newsletter-dialog";
 import { getCurrentYear } from "@/utilities/get-current-year";
 import { ArrowUp } from "lucide-react";
+import { LinkedIn } from "../SocialIcon";
 
 const MENU_TECHNIBUS = [
-  { label: "Canal no WhatsApp", url: "https://whatsapp.com/channel/0029VatKJymGufIo6ZNsYt2H" },
   { label: "Anuncie", url: "https://otmeditora.com/publicidade/technibus" },
+  { label: "Canal no WhatsApp", url: "https://whatsapp.com/channel/0029VatKJymGufIo6ZNsYt2H" },
   { label: "Fale com a redação", url: "mailto:otmeditora@otmeditora.com" },
   { label: "Revistas Technibus", url: "https://acervodigitalotm.com.br/todas-publicacoes?page=1&publication=Technibus" },
 ];
 
 const MENU_SOCIAL = [
+  { label: "Canal no WhatsApp", url: "https://whatsapp.com/channel/0029VatKJymGufIo6ZNsYt2H" },
   { label: "Facebook", url: "https://www.facebook.com/otmeditora" },
   { label: "Instagram (OTM Editora)", url: "https://www.instagram.com/otmeditora/" },
-  { label: "Instagram (Technibus)", url: "https://www.instagram.com/otmeditora/" },
   { label: "Linkedin", url: "https://www.linkedin.com/in/otm-editora-a23367a5/" },
-  { label: "Spotify", url: "https://open.spotify.com/show/7301YGnaZ08ViGvWoc8RBd" },
-  { label: "Canal no WhatsApp", url: "https://whatsapp.com/channel/0029VatKJymGufIo6ZNsYt2H" },
+  { label: "Spotify (Podcast do Transporte)", url: "https://open.spotify.com/show/1C1TOcA6B2FrupnMNxCByu" },
   { label: "Youtube (OTM Editora)", url: "https://www.youtube.com/@otmeditora" },
-  { label: "Youtube (Videocast)", url: "https://www.youtube.com/@videocasttransportemoderno" },
 ];
 
 const MENU_OTMEDITORA = [
+  { label: "Acervo Digital OTM", url: "https://acervodigitalotm.com.br/" },
+  { label: "Agência Transporte Moderno", url: "https://transportemoderno.com.br/" },
+  { label: "Eventos", url: "https://otmeditora.com/eventos" },
   { label: "OTM Editora", url: "https://otmeditora.com/" },
   { label: "OTM Inteligência", url: "https://otminteligencia.com.br/" },
-  { label: "OTM Acervo Digital", url: "https://acervodigitalotm.com.br/" },
-  { label: "Transporte Moderno", url: "https://transportemoderno.com.br/" },
-  { label: "Eventos", url: "https://otmeditora.com/eventos" },
 ];
 
 export async function Footer() {
@@ -57,11 +56,25 @@ export async function Footer() {
                 <a className="link" href="mailto:marciapinna@otmeditora.com">
                   marciapinna@otmeditora.com
                 </a>
+                <a className="link flex items-center gap-0.5" href="https://www.linkedin.com/in/márcia-pinna-raspanti-4a929720/" target="_blank" rel="noopener">
+                  <LinkedIn className="size-4 translate-y-0.5" />
+                  <span>/marcia-pinna</span>
+                </a>
               </p>
             </div>
             <div className="space-y-2">
-              <h2 className="border-secondary border-b pb-2 font-semibold">Colaboradores</h2>
-              <p>Alexandre Asquini</p>
+              <h2 className="border-secondary border-b pb-2 font-semibold">Repórter</h2>
+              <p>
+                Alexandre Asquini <br />
+                <a className="link" href="mailto:alexandreasquini@otmeditora.com">
+                  alexandreasquini@otmeditora.com
+                </a>{" "}
+                <br />
+                <a className="link flex items-center gap-0.5" href="https://www.linkedin.com/in/alexandre-asquini-b1b387140/" target="_blank" rel="noopener">
+                  <LinkedIn className="size-4 translate-y-0.5" />
+                  <span>/alexandre-asquini</span>
+                </a>
+              </p>
             </div>
             <div className="space-y-2">
               <h2 className="border-secondary border-b pb-2 font-semibold">Executivo de contas</h2>
@@ -78,6 +91,8 @@ export async function Footer() {
                 </a>
               </p>
             </div>
+          </div>
+          <div className="space-y-6">
             <div className="space-y-2">
               <h2 className="border-secondary border-b pb-2 font-semibold">Financeiro</h2>
               <p>
@@ -87,8 +102,6 @@ export async function Footer() {
                 </a>
               </p>
             </div>
-          </div>
-          <div className="space-y-6">
             <div className="space-y-2">
               <h2 className="border-secondary border-b pb-2 font-semibold">Eventos corporativos / Marketing</h2>
               <p>
@@ -104,18 +117,6 @@ export async function Footer() {
                 Karoline Jones <br />
                 <a className="link" href="mailto:karolinejones@otmeditora.com">
                   karolinejones@otmeditora.com
-                </a>
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h2 className="border-secondary border-b pb-2 font-semibold">Redes sociais</h2>
-              <p>Aline Feltrin e Márcia Pinna Raspanti</p>
-            </div>
-            <div className="space-y-2">
-              <h2 className="border-secondary border-b pb-2 font-semibold">Design gráfico e editoração</h2>
-              <p>
-                <a className="link" href="https://www.instagram.com/awdesign_____/">
-                  aw I branding & design
                 </a>
               </p>
             </div>
@@ -142,11 +143,11 @@ export async function Footer() {
               <p>Av. Vereador José Diniz, 3300, 7° andar, cj. 707, Campo Belo. CEP 04604-006 – São Paulo / SP</p>
               <p>
                 <a className="link" href="tel:+551150968104">
-                  Tel. (11) 5096-8104 (sequencial)
+                  Tel.: +55 (11) 5096-8104
                 </a>
                 <br />
-                <a className="link" href="mailto:otmeditora@otmeditora.com">
-                  otmeditora@otmeditora.com
+                <a className="link" href="mailto:redacao@otmeditora.com">
+                  redacao@otmeditora.com
                 </a>
               </p>
             </div>
@@ -203,7 +204,7 @@ export async function Footer() {
               </ul>
             </div>
             <div className="col-span-1 space-y-4">
-              <h2 className="border-primary text-primary border-b pb-3 font-semibold">OTM Editora</h2>
+              <h2 className="border-primary text-primary border-b pb-3 font-semibold">Redes sociais</h2>
               <ul className="-ml-3">
                 {MENU_SOCIAL.map((item) => (
                   <li key={item.label}>

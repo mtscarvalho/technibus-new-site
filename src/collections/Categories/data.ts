@@ -15,6 +15,7 @@ export const fetchAllCategories = async (): Promise<Category[]> => {
     depth: 2,
     draft,
     limit: 0,
+    sort: "title",
     where: {
       and: [...(draft ? [] : [{ _status: { equals: "published" } }])],
     },
