@@ -79,6 +79,7 @@ export const fetchPaginatedPostsByCategory = async (categoryId: number, page: nu
     depth: 2,
     draft,
     limit: 12,
+    sort: "-publishedDate",
     page,
     where: {
       and: [{ category: { equals: categoryId } }, ...getPublishedWhere(draft)],
@@ -94,6 +95,7 @@ export const fetchPaginatedPostsByAuthor = async (userId: number, page: number =
     depth: 2,
     draft,
     limit: 12,
+    sort: "-publishedDate",
     page,
     where: {
       and: [{ author: { equals: userId } }, ...getPublishedWhere(draft)],
