@@ -24,7 +24,7 @@ export async function SectionLatestMagazines() {
           </SectionHeadingActions>
         </SectionHeading>
         <ScrollArea className="max-w-full rounded-md pb-3">
-          <div className="flex min-w-max grid-cols-5 gap-6 px-6 pb-5">
+          <div className="flex min-w-max grid-cols-5 gap-6 px-6 pt-1 pb-5">
             {revistas.map((magazine, index) => {
               const linkCard = `https://acervodigitalotm.com.br/magazines/web/viewer.html?publication=${magazine.publication.value.slug}&edition=${magazine.edition}&name=${encodeURIComponent(magazine.name || "")}&file=${encodeURIComponent(`https://acervodigitalotm.com.br${magazine.magazineFile.url}`)}&zoom=page-fit`;
               const imageUrl = `https://acervodigitalotm.com.br${magazine.magazineFile.thumbnail.url}`;

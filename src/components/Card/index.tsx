@@ -41,7 +41,11 @@ export function Card({ category, title, excerpt, image, relPermalink, size, hat,
     <article className={slot.root()}>
       {!disable?.image && (
         <div className="border-secondary bg-secondary relative aspect-[16/10] overflow-hidden rounded border">
-          <PayloadImage className="absolute size-full object-cover transition-transform duration-300 group-hover:scale-105" image={image as Media} disableCaption />
+          <PayloadImage
+            className="absolute size-full object-cover transition-transform duration-300 group-focus-within:scale-105 group-hover:scale-105"
+            image={image as Media}
+            disableCaption
+          />
         </div>
       )}
       <div className="space-y-4">

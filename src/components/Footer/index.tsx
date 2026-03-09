@@ -161,7 +161,7 @@ export async function Footer() {
               <ul className="-ml-3">
                 {categories.map((category) => (
                   <li key={category.id}>
-                    <Button variant="ghost">
+                    <Button variant="ghost" asChild>
                       <Link href={category.relPermalink} rel="noopener" target="_blank">
                         {category.title}
                       </Link>
@@ -178,7 +178,7 @@ export async function Footer() {
                 </li>
                 {MENU_TECHNIBUS.map((item) => (
                   <li key={item.label}>
-                    <Button variant="ghost">
+                    <Button variant="ghost" asChild>
                       <Link href={item.url} rel="noopener" target="_blank">
                         {item.label}
                       </Link>
@@ -192,7 +192,7 @@ export async function Footer() {
               <ul className="-ml-3">
                 {MENU_OTMEDITORA.map((item) => (
                   <li key={item.label}>
-                    <Button variant="ghost">
+                    <Button variant="ghost" asChild>
                       <Link href={item.url} rel="noopener" target="_blank">
                         {item.label}
                       </Link>
@@ -206,7 +206,7 @@ export async function Footer() {
               <ul className="-ml-3">
                 {MENU_SOCIAL.map((item) => (
                   <li key={item.label}>
-                    <Button variant="ghost">
+                    <Button variant="ghost" asChild>
                       <Link href={item.url} rel="noopener" target="_blank">
                         {item.label}
                       </Link>

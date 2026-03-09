@@ -26,12 +26,8 @@ export function FeaturedPosts({ posts }: FeaturedPostsProps) {
       clickable: true,
       renderBullet: (index, className) =>
         ReactDOMServer.renderToStaticMarkup(
-          <span
-            className={cn(
-              "aria-current:bg-brand-primary aria-current:outline-brand-primary outline-brand-primary block size-4 cursor-pointer rounded-full bg-transparent outline-2 outline-offset-3 transition-colors duration-300",
-              className,
-            )}
-          >
+          <span className={cn("aria-current:bg-primary group border-brand-primary grid size-6 cursor-pointer place-items-center rounded-full border-2 bg-transparent", className)}>
+            <span className="group-aria-current:bg-brand-primary block size-3 rounded-full bg-transparent"></span>
             <span className="sr-only">Página {index + 1}</span>
           </span>,
         ),
@@ -39,16 +35,18 @@ export function FeaturedPosts({ posts }: FeaturedPostsProps) {
   };
 
   return (
-    <div className="bg-primary flex flex-col overflow-hidden rounded-lg">
-      <div className="relative">
-        <Swiper className="overflow-visible" {...swiperOptions}>
-          {posts?.map((post) => (
-            <SwiperSlide className="bg-primary h-auto!" key={post.id}>
-              <Card {...post} size="lg" />
-            </SwiperSlide>
-          ))}
-          <div className="swiper-pagination z-10 mx-auto mt-4 flex max-w-max justify-center gap-4 rounded-3xl bg-linear-to-t p-2.5"></div>
-        </Swiper>
+    <div className="">
+      <div className="bg-primary flex flex-col rounded-lg">
+        <div className="relative">
+          <Swiper className="overflow-visible" {...swiperOptions}>
+            {posts?.map((post) => (
+              <SwiperSlide className="bg-primary h-auto! p-1" key={post.id}>
+                <Card {...post} size="lg" />
+              </SwiperSlide>
+            ))}
+            <div className="swiper-pagination z-10 mx-auto mt-4 flex max-w-max justify-center gap-4 rounded-3xl bg-linear-to-t p-2.5"></div>
+          </Swiper>
+        </div>
       </div>
     </div>
   );
