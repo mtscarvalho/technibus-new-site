@@ -14,6 +14,7 @@ import { RichText } from "@/components/RichText";
 import { Sidebar } from "@/components/Sidebar";
 import { Facebook, LinkedIn, Threads, WhatsApp, X } from "@/components/SocialIcon";
 import { SectionHeading, SectionHeadingTitle } from "@/components/TitleWithDivider";
+import { articleSchema } from "@/utilities/schema";
 
 type PageArgs = {
   params: Promise<{
@@ -46,6 +47,13 @@ export default async function Page({ params }: PageArgs) {
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema(post)),
+        }}
+      />
+
       <article className="pt-4 pb-24">
         <div className="container space-y-16">
           <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
