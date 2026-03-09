@@ -48,7 +48,7 @@ export default async function Exibithors({ searchParams }: PageArgs) {
 
   const where = query.and.length > 0 ? query : undefined;
 
-  const { docs: exibithors } = await fetchExibithors(where);
+  const exibithors = await fetchExibithors(where);
 
   return (
     <main className="pt-4 pb-24">
@@ -71,18 +71,18 @@ export default async function Exibithors({ searchParams }: PageArgs) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-3 lg:grid-cols-4">
             {exibithors.map((exibithor) => {
               const firstCategory = exibithor.category?.[0];
               const categoryTitle = typeof firstCategory === "object" && firstCategory !== null ? firstCategory.title : "Sem Categoria";
 
               return (
                 <div key={exibithor.id} className="flex h-full flex-col gap-4 rounded-xl duration-200">
-                  <div className="bg-secondary flex aspect-[4/3] items-center justify-center rounded-lg p-6">
+                  <div className="bg-secondary flex items-center justify-center rounded-lg p-6">
                     {exibithor.logo ? (
-                      <PayloadImage image={exibithor.logo as Media} alt={exibithor.title} width={180} height={80} className="max-h-full w-full object-contain" />
+                      <PayloadImage image={exibithor.logo as Media} alt={exibithor.title} disableCaption className="aspect-[4/3] object-contain p-[15%]" />
                     ) : (
-                      <span className="text-center text-lg font-semibold text-balance text-[#0a1e3f]">{exibithor.title}</span>
+                      <span className="grid aspect-[4/3] size-full place-items-center text-center text-lg font-semibold text-balance text-[#0a1e3f]">{exibithor.title}</span>
                     )}
                   </div>
 
