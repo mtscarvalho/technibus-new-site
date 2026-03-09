@@ -64,7 +64,7 @@ export function NewsletterForm() {
       }
 
       resetForm();
-      setSuccessMessage("Mensagem enviada com sucesso!");
+      setSuccessMessage("Inscrição realizada com sucesso!");
     } catch {
       setErrorMessage("Erro ao enviar o formulário. Tente novamente.");
     } finally {
