@@ -1,5 +1,5 @@
 import { fetchAllLatBusCategories } from "@/collections/LatBusCategories/data";
-import { fetchExibithorsSearch } from "@/collections/LatBusExibithors/data";
+import { fetchExibithors } from "@/collections/LatBusExibithors/data";
 import { FilterExibithors } from "@/components/FilterExibithors";
 import { PayloadImage } from "@/components/Payload/Image";
 import { WhatsApp } from "@/components/SocialIcon";
@@ -48,7 +48,7 @@ export default async function Exibithors({ searchParams }: PageArgs) {
 
   const where = query.and.length > 0 ? query : undefined;
 
-  const { docs: exibithors } = await fetchExibithorsSearch(where);
+  const { docs: exibithors } = await fetchExibithors(where);
 
   return (
     <main className="pt-4 pb-24">
