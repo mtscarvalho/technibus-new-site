@@ -5,7 +5,9 @@ export const searchPlugin = payloadSearchPlugin({
   collections: ["posts"],
 
   searchOverrides: {
-    admin: {},
+    admin: {
+      hidden: true,
+    },
 
     fields: ({ defaultFields }) => [
       ...defaultFields,
