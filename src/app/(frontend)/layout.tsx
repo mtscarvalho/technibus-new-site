@@ -31,10 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`} id="topo">
         <NewsletterDialogProvider>
           <Header />
-          <div className="container mb-6">
+          <div className="container mb-6" id="conteudo">
             <Ads className="mx-auto max-w-5xl" position="main" />
           </div>
           {children}

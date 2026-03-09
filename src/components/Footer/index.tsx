@@ -4,6 +4,7 @@ import Link from "next/link";
 import { fetchAllCategories } from "@/collections/Categories/data";
 import { Button } from "@/components/Button";
 import { NewsletterDialogButton } from "@/providers/newsletter-dialog";
+import { ArrowUp } from "lucide-react";
 
 const MENU_TECHNIBUS = [
   { label: "Canal no WhatsApp", url: "https://whatsapp.com/channel/0029VatKJymGufIo6ZNsYt2H" },
@@ -227,6 +228,13 @@ export async function Footer() {
           </div>
         </div>
       </div>
+
+      <Button className="back-to-top" asChild>
+        <a href="#topo">
+          Voltar ao topo
+          <ArrowUp className="size-4" />
+        </a>
+      </Button>
     </footer>
   );
 }

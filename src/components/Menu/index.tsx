@@ -54,9 +54,6 @@ export function Menu({ categories }: MenuProps) {
 
   return (
     <div className={`bg-brand-primary z-30 mb-10 w-full py-4 ${isOpen ? "border-secondary overflow-auto border-b" : "h-auto"}`} ref={menuRef}>
-      <Button className="skip-to-main" asChild>
-        <Link href="#main">Pular para o conteúdo</Link>
-      </Button>
       <div className="container">
         <div className="flex flex-wrap items-center justify-between">
           <Link href="/">
