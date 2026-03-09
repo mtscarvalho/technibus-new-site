@@ -58,12 +58,13 @@ export function PostArchiveFeed({ posts, page, totalPages, path, query, cardDisa
         {posts.map((post, index) => (
           <Fragment key={post.id}>
             <Card {...post} disable={cardDisable} size="sm" />
-            {index === 2 && <Ads className="lg:hidden" position="sidebar-top" />}
-            {index === 6 && <Ads className="lg:hidden" position="sidebar-middle" />}
+            {index === 2 && <Ads className="lg:hidden" variant="sidebarTopo" />}
+            {index === 6 && <Ads className="lg:hidden" variant="sidebarMeio" />}
+            {index === 7 && <Ads className="lg:hidden" variant="sidebarMeio2" />}
           </Fragment>
         ))}
       </PostGrid>
-      <Ads className="lg:hidden" position="sidebar-bottom-premium" />
+      <Ads className="lg:hidden" variant="sidebarBase" />
       <Pagination page={page} totalPages={totalPages} path={path} query={query} />
     </>
   );

@@ -45,6 +45,9 @@ export const Users: CollectionConfig = {
       label: "Imagem",
       type: "upload",
       relationTo: "media",
+      admin: {
+        description: "Recomenda-se uma imagem quadrada de 128x128px para melhor exibição.",
+      },
     },
     {
       label: "Publicações relacionadas",

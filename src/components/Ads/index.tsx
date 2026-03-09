@@ -1,53 +1,47 @@
-import { cn } from "@/utilities/cn";
-
-type AdPosition = "main" | "main-premium" | "sidebar-top" | "sidebar-top-premium" | "sidebar-middle" | "sidebar-middle-premium" | "sidebar-bottom" | "sidebar-bottom-premium";
-
-type AdConfig = {
-  desktop: { width: number; height: number };
-  mobile?: { width: number; height: number };
-};
-
-const AD_SIZES: Record<AdPosition, AdConfig> = {
-  main: {
-    desktop: { width: 970, height: 90 },
-    mobile: { width: 320, height: 50 },
-  },
-  "main-premium": {
-    desktop: { width: 970, height: 250 },
-    mobile: { width: 320, height: 100 },
-  },
-  "sidebar-top": {
-    desktop: { width: 300, height: 250 },
-  },
-  "sidebar-top-premium": {
-    desktop: { width: 300, height: 600 },
-  },
-  "sidebar-middle": {
-    desktop: { width: 300, height: 250 },
-  },
-  "sidebar-middle-premium": {
-    desktop: { width: 300, height: 600 },
-  },
-  "sidebar-bottom": {
-    desktop: { width: 300, height: 250 },
-  },
-  "sidebar-bottom-premium": {
-    desktop: { width: 300, height: 600 },
-  },
-};
-
 type AdsProps = {
-  position: AdPosition;
+  variant: "sidebarTopo" | "sidebarMeio" | "sidebarMeio2" | "sidebarBase" | "principalMobile" | "principalDesktop";
   className?: string;
 };
 
-export function Ads({ position, className }: AdsProps) {
-  const config = AD_SIZES[position];
+export function Ads({ variant, className }: AdsProps) {
+  switch (variant) {
+    case "sidebarTopo":
+      return (
+        // /334660191/TB-barra_direita-300xX-topo
+        <div id="div-gpt-ad-1773058261868-0" className={className} style={{ minWidth: 300, minHeight: 250 }} />
+      );
 
-  return (
-    <div className={cn("w-full", className)}>
-      {/* <Skeleton className="block w-full md:hidden" style={{ aspectRatio: `${config.mobile?.width ?? config.desktop.width} / ${config.mobile?.height ?? config.desktop.height}` }} /> */}
-      {/* <Skeleton className="hidden w-full md:block" style={{ aspectRatio: `${config.desktop.width} / ${config.desktop.height}` }} /> */}
-    </div>
-  );
+    case "sidebarMeio":
+      return (
+        // /334660191/TB-barra_direita-300xX-meio
+        <div id="div-gpt-ad-1773055055101-0" className={className} style={{ minWidth: 300, minHeight: 250 }} />
+      );
+
+    case "sidebarMeio2":
+      return (
+        // /334660191/TB-barra_direita-300xX-meio-2
+        <div id="div-gpt-ad-1773055055713-0" className={className} style={{ minWidth: 300, minHeight: 250 }} />
+      );
+
+    case "sidebarBase":
+      return (
+        // /334660191/TB-barra_direita-300xX-base
+        <div id="div-gpt-ad-1773055047019-0" className={className} style={{ minWidth: 300, minHeight: 250 }} />
+      );
+
+    case "principalMobile":
+      return (
+        // /334660191/TB-principal-320xX-mobile
+        <div id="div-gpt-ad-1773055056838-0" className={className} style={{ minWidth: 320, minHeight: 50 }} />
+      );
+
+    case "principalDesktop":
+      return (
+        // /334660191/TB-principal-970xX-desktop
+        <div id="div-gpt-ad-1773055057390-0" className={className} style={{ minWidth: 728, minHeight: 90 }} />
+      );
+
+    default:
+      return <div />;
+  }
 }

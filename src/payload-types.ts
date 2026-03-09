@@ -157,6 +157,9 @@ export interface User {
   name: string;
   role?: string | null;
   bio?: string | null;
+  /**
+   * Recomenda-se uma imagem quadrada de 128x128px para melhor exibição.
+   */
   image?: (number | null) | Media;
   posts?: {
     docs?: (number | Post)[];

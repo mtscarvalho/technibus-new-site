@@ -87,8 +87,8 @@ export default async function Page() {
 
               {/* Ads */}
               <PostGrid className="lg:hidden" variant="2-cols">
-                <Ads className="lg:hidden" position="sidebar-top" />
-                <Ads className="max-md:hidden lg:hidden" position="sidebar-middle" />
+                <Ads className="lg:hidden" variant="sidebarTopo" />
+                <Ads className="max-md:hidden lg:hidden" variant="sidebarMeio" />
               </PostGrid>
 
               {/* Latest */}
@@ -104,7 +104,10 @@ export default async function Page() {
               </div>
 
               {/* Ads */}
-              <Ads className="md:hidden" position="sidebar-middle" />
+              <PostGrid className="lg:hidden" variant="2-cols">
+                <Ads className="lg:hidden" variant="sidebarMeio2" />
+                <Ads className="max-md:hidden lg:hidden" variant="sidebarBase" />
+              </PostGrid>
 
               {/* Specials */}
               <PostGrid variant="2-cols">
@@ -125,9 +128,6 @@ export default async function Page() {
                   ))}
                 </div>
               </PostGrid>
-
-              {/* Ads */}
-              <Ads className="lg:hidden" position="sidebar-bottom-premium" />
             </div>
             <Sidebar />
           </div>

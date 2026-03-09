@@ -133,11 +133,11 @@ export default async function Page({ params }: PageArgs) {
               </div>
               {post.image && <PayloadImage className="border-secondary bg-secondary w-full rounded-md border" image={post.image as Media} />}
               <div className="grid gap-8 sm:grid-cols-2 lg:hidden">
-                <Ads position="sidebar-top" />
-                <Ads position="sidebar-middle" />
+                <Ads variant="sidebarTopo" />
+                <Ads variant="sidebarMeio" />
               </div>
               {post.content && <RichText data={post.content} />}
-              <Ads className="lg:hidden" position="sidebar-bottom-premium" />
+              <Ads className="lg:hidden" variant="sidebarMeio2" />
               <div className="space-y-6">
                 <SectionHeading>
                   <SectionHeadingTitle>Publicações relacionadas</SectionHeadingTitle>
@@ -148,6 +148,7 @@ export default async function Page({ params }: PageArgs) {
                   ))}
                 </PostGrid>
               </div>
+              <Ads className="lg:hidden" variant="sidebarBase" />
             </div>
             <Sidebar />
           </div>
