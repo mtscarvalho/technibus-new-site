@@ -32,6 +32,7 @@ export function Pagination({ className, page, path, totalPages, query }: Paginat
     <div className={cn("mt-12", className)}>
       <nav aria-label="pagination" className="mx-auto flex w-full justify-center" role="navigation">
         <ul className="flex flex-row items-center gap-1">
+          {/* Previous */}
           <li className="-mr-1">
             {hasPrevPage ? (
               <Button asChild variant="subtle" aria-label="Ir para página anterior">
@@ -48,28 +49,64 @@ export function Pagination({ className, page, path, totalPages, query }: Paginat
             )}
           </li>
 
+          {/* First page */}
+          {page > 2 && (
+            <>
+              <li className="max-sm:hidden">
+                <Button asChild size="icon" variant="subtle" aria-label="Ir para primeira página">
+                  <Link href={getPageHref(1)}>1</Link>
+                </Button>
+              </li>
+              <li className="max-sm:hidden">
+                <Button asChild size="icon" variant="subtle" aria-label={`Ir para página ${page + 1}`}>
+                  <span>...</span>
+                </Button>
+              </li>
+            </>
+          )}
+
+          {/* Previous number */}
           {hasPrevPage && (
-            <li>
+            <li className="max-sm:hidden">
               <Button asChild size="icon" variant="subtle" aria-label={`Ir para página ${page - 1}`}>
                 <Link href={getPageHref(page - 1)}>{page - 1}</Link>
               </Button>
             </li>
           )}
 
-          <li>
+          {/* Current */}
+          <li className="max-sm:hidden">
             <Button className="pointer-events-none" size="icon" variant="primary" aria-current="page" asChild>
               <span>{page}</span>
             </Button>
           </li>
 
+          {/* Next number */}
           {hasNextPage && (
-            <li>
+            <li className="max-sm:hidden">
               <Button asChild size="icon" variant="subtle" aria-label={`Ir para página ${page + 1}`}>
                 <Link href={getPageHref(page + 1)}>{page + 1}</Link>
               </Button>
             </li>
           )}
 
+          {/* Last page */}
+          {page < totalPages && (
+            <>
+              <li className="max-sm:hidden">
+                <Button asChild size="icon" variant="subtle" aria-label={`Ir para página ${page + 1}`}>
+                  <span>...</span>
+                </Button>
+              </li>
+              <li className="max-sm:hidden">
+                <Button asChild size="icon" variant="subtle" aria-label="Ir para última página">
+                  <Link href={getPageHref(totalPages)}>{totalPages}</Link>
+                </Button>
+              </li>
+            </>
+          )}
+
+          {/* Next */}
           <li className="-ml-1">
             {hasNextPage ? (
               <Button asChild variant="subtle" aria-label="Ir para próxima página">
