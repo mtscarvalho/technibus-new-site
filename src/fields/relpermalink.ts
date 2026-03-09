@@ -16,6 +16,7 @@ export const relPermalinkField = ({ overrides }: relPermalinkFieldProps = {}): F
       readOnly: true,
       position: "sidebar",
     },
+    defaultValue: "/",
     required: true,
     hooks: {
       beforeChange: [generateRelPeramlinkWithDate()],
