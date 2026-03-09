@@ -25,6 +25,7 @@ import { buildConfig, TextFieldSingleValidation } from "payload";
 import { pt } from "@payloadcms/translations/languages/pt";
 
 import { YouTubeEmbedBlock } from "@/blocks/YoutubeEmbed";
+
 import { seoPlugin } from "@payloadcms/plugin-seo";
 
 import { Categories } from "@/collections/Categories/config";
@@ -123,5 +124,22 @@ export default buildConfig({
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   sharp,
-  plugins: [seoPlugin({}), searchPlugin],
+  plugins: [
+    seoPlugin({}),
+    // s3Storage({
+    //   collections: {
+    //     media: true,
+    //   },
+    //   bucket: process.env.CLOUDFLARE_R2_BUCKET!,
+    //   config: {
+    //     endpoint: process.env.CLOUDFLARE_R2_ENDPOINT!,
+    //     credentials: {
+    //       accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID!,
+    //       secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY!,
+    //     },
+    //     region: "auto",
+    //   },
+    // }),
+    searchPlugin,
+  ],
 });
