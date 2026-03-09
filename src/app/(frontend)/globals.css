@@ -419,6 +419,10 @@
   @apply text-4xl font-medium tracking-tighter;
 }
 
+@utility tag {
+  @apply border-secondary bg-primary hover:bg-secondary block rounded-lg border px-2 py-0.5 text-sm transition-colors duration-300;
+}
+
 @layer components {
   .back-to-top {
     @apply fixed right-6 bottom-6 z-20 not-focus:sr-only;

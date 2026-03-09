@@ -58,10 +58,7 @@ export function Card({ category, title, excerpt, image, relPermalink, size, hat,
                 const c = cat as Category;
                 return (
                   <li key={c.id}>
-                    <Link
-                      className="border-secondary bg-primary hover:bg-secondary block rounded-lg border px-2 py-0.5 text-sm transition-colors duration-300"
-                      href={c.relPermalink}
-                    >
+                    <Link className="tag" href={c.relPermalink}>
                       {c.title}
                     </Link>
                   </li>

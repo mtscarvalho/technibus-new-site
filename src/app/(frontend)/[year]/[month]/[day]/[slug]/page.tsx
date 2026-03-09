@@ -60,18 +60,18 @@ export default async function Page({ params }: PageArgs) {
             <div className="space-y-8">
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
-                  <p className="uppertitle">
-                    {(post.category as Category[]).map((category, index) => {
-                      const isLast = index === post.category.length - 1;
-
+                  <ul className="relative z-10 flex flex-wrap gap-2">
+                    {post.category.map((cat) => {
+                      const c = cat as Category;
                       return (
-                        <span key={category.id}>
-                          <Link href={category.relPermalink}>{category.title}</Link>
-                          {!isLast && ", "}
-                        </span>
+                        <li key={c.id}>
+                          <Link className="tag" href={c.relPermalink}>
+                            {c.title}
+                          </Link>
+                        </li>
                       );
                     })}
-                  </p>
+                  </ul>
                   <h1 className="text-primary text-4xl font-medium">{post.title}</h1>
                 </div>
                 {post.excerpt && <p className="text-secondary text-pretty">{post.excerpt}</p>}
