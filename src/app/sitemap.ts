@@ -13,6 +13,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${process.env.SITE_URL}`,
     },
+    {
+      url: `${process.env.SITE_URL}/guia-dos-expositores-lat-bus`,
+    },
+    {
+      url: `${process.env.SITE_URL}/pesquisar `,
+    },
   ];
 
   posts.forEach((post) => {
