@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         event_type: "CONVERSION",
         event_family: "CDP",
         payload: {
-          conversion_identifier: "newsletter",
+          conversion_identifier: "technibus-newsletter",
           email: email,
         },
       }),
