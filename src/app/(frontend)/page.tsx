@@ -46,7 +46,7 @@ export default async function Page() {
         <h1 className="sr-only">A mais tradicional revista brasileira dedicada ao transporte de passageiros por ônibus.</h1>
         <div className="container">
           <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
-            <div className="space-y-10">
+            <div className="flex flex-col gap-10">
               {/* Featured */}
               <div className="space-y-3">
                 <PostGrid variant="none" className="lg:grid-cols-12">

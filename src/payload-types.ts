@@ -149,7 +149,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  slug?: string | null;
+  slug: string;
   relPermalink: string;
   name: string;
   role?: string | null;
@@ -200,7 +200,7 @@ export interface Media {
 export interface Post {
   id: number;
   relPermalink: string;
-  slug?: string | null;
+  slug: string;
   author?: (number | null) | User;
   title: string;
   excerpt: string;
@@ -234,7 +234,7 @@ export interface Post {
  */
 export interface Tag {
   id: number;
-  slug?: string | null;
+  slug: string;
   title: string;
   posts?: {
     docs?: (number | Post)[];
@@ -250,7 +250,7 @@ export interface Tag {
  */
 export interface Category {
   id: number;
-  slug?: string | null;
+  slug: string;
   relPermalink: string;
   title: string;
   description?: string | null;

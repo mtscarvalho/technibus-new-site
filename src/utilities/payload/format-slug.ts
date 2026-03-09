@@ -7,6 +7,7 @@ export function formatSlug(): FieldHook {
     if (data?.title || data?.name) {
       return slugify(data.slug) || slugify(data.title) || slugify(data.name);
     }
-    return originalDoc?.slug;
+
+    return "";
   };
 }
