@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${process.env.SITE_URL}`,
     },
     {
-      url: `${process.env.SITE_URL}/guia-dos-expositores-lat-bus-2026`,
+      url: `${process.env.SITE_URL}/guia-de-expositores-lat-bus-2026`,
     },
     {
       url: `${process.env.SITE_URL}/pesquisar `,

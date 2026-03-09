@@ -7,11 +7,12 @@ type PayloadImageProps = {
   image: Media;
   width?: number;
   height?: number;
+  alt?: string;
   loading?: "eager" | "lazy";
   disableCaption?: boolean;
 };
 
-export function PayloadImage({ image, className, width, height, loading = "lazy", disableCaption = false }: PayloadImageProps) {
+export function PayloadImage({ image, className, alt, width, height, loading = "lazy", disableCaption = false }: PayloadImageProps) {
   if (!isMediaObject(image)) {
     return null;
   }
@@ -24,7 +25,7 @@ export function PayloadImage({ image, className, width, height, loading = "lazy"
         src={image.url!}
         width={width ? width : image.width!}
         height={height ? height : image.height!}
-        alt={image.alt || image.caption || ""}
+        alt={alt || image.alt || image.caption || ""}
         loading={loading}
         placeholder={image.blurhash ? "blur" : "empty"}
         blurDataURL={image.blurhash || undefined}

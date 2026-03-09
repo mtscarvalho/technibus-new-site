@@ -404,11 +404,11 @@
 }
 
 @utility link {
-  @apply text-brand-primary hover:text-brand-secondary underline transition-colors duration-300;
+  @apply text-brand-primary hover:text-brand-midnight-600 transition-colors duration-300;
 }
 
 @utility uppertitle {
-  @apply text-brand-blue-600 text-xs tracking-wider uppercase;
+  @apply text-brand-primary text-xs tracking-wider uppercase;
 }
 
 @utility subheading {
