@@ -18,7 +18,10 @@ export function SearchForm({ searchTerm }: SearchAreaProps) {
 
   return (
     <form action="/pesquisar" method="GET" className="relative">
-      <Input className="pr-9 pl-9" type="text" name="s" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Busque aqui..." />
+      <label className="sr-only" htmlFor="pesquisar">
+        Pesquisar
+      </label>
+      <Input className="pr-9 pl-9" id="pesquisar" type="text" name="s" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Busque aqui..." />
 
       {value && (
         <button type="button" onClick={handleReset} className="absolute top-1/2 right-3 -translate-y-1/2 rounded" aria-label="Limpar busca">

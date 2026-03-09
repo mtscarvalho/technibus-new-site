@@ -94,7 +94,10 @@ export function FilterExibithors({ categories, initialCategory, initialSearch }:
 
       <div className="flex w-full gap-2">
         <div className="relative flex-1">
-          <Input type="text" name="s" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Pesquisar" className="w-full pr-10" />
+          <label className="sr-only" htmlFor="pesquisar-exhibitors">
+            Pesquisar
+          </label>
+          <Input type="text" name="s" id="pesquisar-exhibitors" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Pesquisar" className="w-full pr-10" />
           <Search className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2" />
         </div>
       </div>
