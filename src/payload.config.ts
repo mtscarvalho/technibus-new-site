@@ -41,6 +41,7 @@ import { Users } from "@/collections/Users/config";
 import { SpotifyEmbedBlock } from "./blocks/SpotifyEmbed";
 
 import { Topbar } from "@/globals/Topbar/config";
+import { SocialMediaSettings } from "./globals/SocialMediaSettings/config";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -117,7 +118,7 @@ export default buildConfig({
     ],
   }),
   collections: [Users, Posts, Media, Categories, Tags, LatBusExibithors, LatBusCategories],
-  globals: [Topbar],
+  globals: [Topbar, SocialMediaSettings],
   secret: process.env.PAYLOAD_SECRET || "",
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || "" },
