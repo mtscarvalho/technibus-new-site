@@ -114,9 +114,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     topbar: Topbar;
+    'social-media-settings': SocialMediaSetting;
   };
   globalsSelect: {
     topbar: TopbarSelect<false> | TopbarSelect<true>;
+    'social-media-settings': SocialMediaSettingsSelect<false> | SocialMediaSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -655,6 +657,19 @@ export interface Topbar {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-media-settings".
+ */
+export interface SocialMediaSetting {
+  id: number;
+  /**
+   * Informe a URL do webhook do Zapier para envio de posts.
+   */
+  zapierEndpointUrl: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "topbar_select".
  */
 export interface TopbarSelect<T extends boolean = true> {
@@ -663,6 +678,16 @@ export interface TopbarSelect<T extends boolean = true> {
   content?: T;
   backgroundColor?: T;
   theme?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-media-settings_select".
+ */
+export interface SocialMediaSettingsSelect<T extends boolean = true> {
+  zapierEndpointUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
