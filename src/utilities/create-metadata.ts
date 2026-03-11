@@ -1,19 +1,24 @@
+import { Media } from "@/payload-types";
 import { Metadata } from "next";
 
 type CreateMetadataProps = {
   path: string;
   title: string;
   description: string;
-  ogImageUrl?: string;
+  image?: Media;
   prev?: string;
   next?: string;
   noIndex?: boolean;
 };
 
-export function createMetadata({ path, title, description, prev, next, ogImageUrl, noIndex = false }: CreateMetadataProps): Metadata {
+export function createMetadata({ path, title, description, prev, next, image, noIndex = false }: CreateMetadataProps): Metadata {
   const baseUrl = process.env.SITE_URL!;
   const siteTitle = process.env.SITE_TITLE!;
   const url = `${baseUrl}${path}`;
+
+  const imageUrl = image?.url || `${baseUrl}/opengraph-image.png`;
+  const imageWidth = image?.width || 1200;
+  const imageHeight = image?.height || 630;
 
   return {
     title,
@@ -28,10 +33,10 @@ export function createMetadata({ path, title, description, prev, next, ogImageUr
       url,
       images: [
         {
-          url: ogImageUrl || `${baseUrl}/opengraph-image.png`,
-          width: 1200,
-          height: 630,
-          alt: siteTitle,
+          url: imageUrl,
+          width: imageWidth,
+          height: imageHeight,
+          alt: image?.alt || siteTitle,
         },
       ],
     },
