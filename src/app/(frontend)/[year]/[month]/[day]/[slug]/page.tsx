@@ -20,6 +20,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Facebook, LinkedIn, Threads, WhatsApp, X } from "@/components/SocialIcon";
 import { SectionHeading, SectionHeadingTitle } from "@/components/TitleWithDivider";
 
+import { PayloadImage } from "@/components/Payload/Image";
 import { headers as getHeaders } from "next/headers";
 import { getPayload } from "payload";
 
@@ -147,7 +148,7 @@ export default async function Page({ params }: PageArgs) {
                     </li>
                   </ul>
                 </div>
-                {/* {post.image && <PayloadImage className="border-secondary bg-secondary w-full rounded-md border" image={post.image as Media} />} */}
+                {post.image && <PayloadImage className="border-secondary bg-secondary w-full rounded-md border" image={post.image as Media} />}
                 <div className="grid gap-8 sm:grid-cols-2 lg:hidden">
                   <Ads variant="sidebarTopo" />
                   <Ads variant="sidebarMeio" />
