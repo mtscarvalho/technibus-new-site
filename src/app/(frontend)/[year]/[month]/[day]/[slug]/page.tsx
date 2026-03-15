@@ -20,6 +20,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Facebook, LinkedIn, Threads, WhatsApp, X } from "@/components/SocialIcon";
 import { SectionHeading, SectionHeadingTitle } from "@/components/TitleWithDivider";
 
+import { TrackView } from "@/components/TrackView";
 import { headers as getHeaders } from "next/headers";
 import { getPayload } from "payload";
 
@@ -61,6 +62,8 @@ export default async function Page({ params }: PageArgs) {
   return (
     <>
       <RefreshRouteOnSave />
+
+      <TrackView postId={post.id} />
 
       <main>
         <script

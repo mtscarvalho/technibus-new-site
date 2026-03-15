@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    'daily-views': DailyView;
     posts: Post;
     media: Media;
     categories: Category;
@@ -96,6 +97,7 @@ export interface Config {
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    'daily-views': DailyViewsSelect<false> | DailyViewsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
@@ -290,6 +292,18 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "daily-views".
+ */
+export interface DailyView {
+  id: number;
+  post: number | Post;
+  date: string;
+  views: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "latBusExibithors".
  */
 export interface LatBusExibithor {
@@ -376,6 +390,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'daily-views';
+        value: number | DailyView;
       } | null)
     | ({
         relationTo: 'posts';
@@ -468,6 +486,17 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "daily-views_select".
+ */
+export interface DailyViewsSelect<T extends boolean = true> {
+  post?: T;
+  date?: T;
+  views?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

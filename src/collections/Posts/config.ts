@@ -4,6 +4,7 @@ import { relPermalinkField } from "@/fields/relpermalink";
 import { slugField } from "@/fields/slug";
 import { revalidatePath } from "next/cache";
 import { convertImage } from "./endpoints/convert-image";
+import { seedDailyViews } from "./endpoints/seed-views";
 import { sendToSocial } from "./endpoints/send-to-social";
 
 export const Posts: CollectionConfig = {
@@ -61,6 +62,12 @@ export const Posts: CollectionConfig = {
       path: "/convert-image",
       method: "get",
       handler: convertImage,
+    },
+    // TODO: Remover após rodar uma vez no banco em produção para popular a collection de DailyViews com dados históricos
+    {
+      path: "/seed-views",
+      method: "get", // Usamos GET apenas para facilitar a execução no navegador
+      handler: seedDailyViews,
     },
   ],
   fields: [

@@ -39,6 +39,7 @@ import { SpotifyEmbedBlock } from "./blocks/SpotifyEmbed";
 
 import { Topbar } from "@/globals/Topbar/config";
 import plugins from "@/plugins";
+import { DailyViews } from "./collections/DailyViews/config";
 import { SocialMediaSettings } from "./globals/SocialMediaSettings/config";
 
 const filename = fileURLToPath(import.meta.url);
@@ -126,7 +127,7 @@ export default buildConfig({
       }),
     ],
   }),
-  collections: [Users, Posts, Media, Categories, Tags, LatBusExibithors, LatBusCategories],
+  collections: [Users, DailyViews, Posts, Media, Categories, Tags, LatBusExibithors, LatBusCategories],
   globals: [Topbar, SocialMediaSettings],
   secret: process.env.PAYLOAD_SECRET || "",
   db: postgresAdapter({
