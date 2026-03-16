@@ -80,11 +80,11 @@ export default async function Page({ params }: PageArgs) {
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
                     <ul className="relative z-10 flex flex-wrap gap-2">
-                      {post.category.map((cat) => {
+                      {post.category.map((cat, index) => {
                         const c = cat as Category;
                         return (
-                          <li key={c.id}>
-                            <Link className="tag" href={c.relPermalink}>
+                          <li key={c.id || index}>
+                            <Link className="tag" href={c.relPermalink || "#"}>
                               {c.title}
                             </Link>
                           </li>
@@ -98,9 +98,13 @@ export default async function Page({ params }: PageArgs) {
                 <div className="flex flex-wrap justify-between gap-4">
                   <p className="text-secondary">
                     Publicado em {new Date(post.publishedDate).toLocaleDateString("pt-BR")} por{" "}
-                    <Link className="link" href={(post.author as User).relPermalink}>
-                      {(post.author as User).name}
-                    </Link>
+                    {(post.author as User)?.relPermalink ? (
+                      <Link className="link" href={(post.author as User).relPermalink}>
+                        {(post.author as User).name}
+                      </Link>
+                    ) : (
+                      <span>{(post.author as User)?.name || "Autor desconhecido"}</span>
+                    )}
                   </p>
                   <ul className="flex gap-4">
                     <li>
