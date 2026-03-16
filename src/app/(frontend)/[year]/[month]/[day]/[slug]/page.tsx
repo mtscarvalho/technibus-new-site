@@ -35,6 +35,10 @@ export async function generateMetadata({ params }: PageArgs) {
   const { slug } = await params;
   const post = await fetchPostBySlug(slug);
 
+  if (!post) {
+    return {};
+  }
+
   return createMetadata({
     path: post.relPermalink,
     title: post.title,
