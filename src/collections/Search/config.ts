@@ -1,7 +1,8 @@
 import { richTextToPlainText } from "@/utilities/richtext-to-plaintext";
 import { searchPlugin as payloadSearchPlugin } from "@payloadcms/plugin-search";
+import { Plugin } from "payload";
 
-export const searchPlugin = payloadSearchPlugin({
+export const searchPlugin: Plugin = payloadSearchPlugin({
   collections: ["posts"],
 
   searchOverrides: {
