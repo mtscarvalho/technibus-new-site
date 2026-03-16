@@ -24,7 +24,7 @@ function getPublishedWhere(draft: boolean): Where[] {
   ];
 }
 
-export const fetchPostBySlug = async (slug: string, user?: boolean): Promise<Post> => {
+export const fetchPostBySlug = async (slug: string, user?: boolean): Promise<Post | undefined> => {
   const data = await payload.find({
     collection: "posts",
     depth: 2,
