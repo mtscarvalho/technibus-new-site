@@ -10,7 +10,8 @@
     "payload:generate": "payload generate:importmap && payload generate:importmap",
     "payload:generate-types": "payload generate:types",
     "payload:generate-importmap": "payload generate:importmap",
-    "import:wp": "tsx scripts/import-post-from-wordpress-to-payload-cms.ts"
+    "import:wp": "tsx scripts/import-post-from-wordpress-to-payload-cms.ts",
+    "publish": "git push && git push rufus main"
   },
   "cacheDirectories": [
     ".next/cache"

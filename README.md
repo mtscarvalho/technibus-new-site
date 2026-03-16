@@ -66,13 +66,22 @@ Ensure you have the following installed:
 ## Deployment
 
 1. Add the remote server:
+
    ```sh
    git remote add <server_name> ssh://dokku@<server_address>:822/<app_name>
    ```
+
+   Example:
+
+   ```sh
+   git remote add rufus ssh://dokku@rufus.jogajunto.co:822/technibus-site
+   ```
+
 2. Push the code to deploy:
+   ````
    ```sh
    git push <server_name> main
-   ```
+   ````
 
 ---
 
