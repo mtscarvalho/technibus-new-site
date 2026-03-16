@@ -37,9 +37,7 @@ export const Posts: CollectionConfig = {
   },
   versions: {
     drafts: {
-      autosave: {
-        interval: 2000,
-      },
+      autosave: true,
     },
   },
   hooks: {
@@ -47,6 +45,22 @@ export const Posts: CollectionConfig = {
       ({ operation }) => {
         if (operation === "update") {
           revalidatePath("/", "layout");
+        }
+      },
+    ],
+    beforeDelete: [
+      async ({ req, id }) => {
+        try {
+          await req.payload.delete({
+            collection: "daily-views",
+            where: {
+              post: {
+                equals: id,
+              },
+            },
+          });
+        } catch (error) {
+          console.error("Erro ao limpar daily-views antes de deletar o post:", error);
         }
       },
     ],
