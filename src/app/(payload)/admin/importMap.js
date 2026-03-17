@@ -21,6 +21,7 @@ import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from 
 import { default as default_0c7abe6604c1b82847e76da1bdede337 } from '@/components/Payload/ColorPicker'
 import { default as default_3bad62110f863441cc632684bc7af343 } from '../../../components/Payload/DashboardIcon/index.tsx'
 import { default as default_1a2c36d784547fa77b725a86368390b8 } from '../../../components/Payload/DashboardLogo/index.tsx'
+import { PurgeEverythingButton as PurgeEverythingButton_c48a36b016f6cc75702e8b9b2994e58e } from 'payload-plugin-cloudflare-purge/client'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -48,6 +49,7 @@ export const importMap = {
   "@/components/Payload/ColorPicker#default": default_0c7abe6604c1b82847e76da1bdede337,
   "/components/Payload/DashboardIcon/index.tsx#default": default_3bad62110f863441cc632684bc7af343,
   "/components/Payload/DashboardLogo/index.tsx#default": default_1a2c36d784547fa77b725a86368390b8,
+  "payload-plugin-cloudflare-purge/client#PurgeEverythingButton": PurgeEverythingButton_c48a36b016f6cc75702e8b9b2994e58e,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
