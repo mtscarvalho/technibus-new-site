@@ -13,12 +13,8 @@ const RSCValidate = (): Promise<Header[]> | Header[] => {
       value: "private, no-cache, no-store, max-age=0, must-revalidate",
     },
     {
-      key: "CDN-Cache-Control",
-      value: "private, no-store",
-    },
-    {
       key: "Vary",
-      value: "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept",
+      value: "RSC, Next-Router-State-Tree, Next-Router-Prefetch",
     },
   ];
 
@@ -136,6 +132,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      ...(RSCValidate() as Header[]),
       {
         source: "/((?!_next/static|_next/image|_next/data|assets|api|favicon.ico|admin).*)",
         headers: [
@@ -145,7 +142,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      ...(RSCValidate() as Header[]),
       {
         source: "/api/((?!media).*)",
         headers: [{ key: "Cache-Control", value: "private, no-cache, no-store, must-revalidate" }],
