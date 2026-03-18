@@ -34,6 +34,7 @@ export const fetchPostBySlug = async (slug: string, user?: boolean): Promise<Pos
     where: {
       and: [{ slug: { equals: slug } }],
     },
+    ...(user && { next: { revalidate: 0 } }),
   });
 
   return data.docs[0];
