@@ -110,6 +110,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/((?!_next/static|_next/image|_next/data|assets|api|favicon.ico|admin).*)",
+        missing: [{ type: "cookie", key: "payload-token" }],
         headers: [
           {
             key: "Cache-Control",
