@@ -12,15 +12,68 @@ type RichTextProps = {
 type NodeTypes = DefaultNodeTypes | SerializedBlockNode<YouTubeEmbedProps> | SerializedBlockNode<SpotifyEmbedProps>;
 
 export function RichText({ data }: RichTextProps) {
-  const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
-    ...defaultConverters,
-    blocks: {
-      youtubeEmbed: ({ node }: { node: SerializedBlockNode<YouTubeEmbedProps> }) => <YouTubeEmbed {...node.fields} />,
-      spotifyEmbed: ({ node }: { node: SerializedBlockNode<SpotifyEmbedProps> }) => <SpotifyEmbed {...node.fields} />,
-    },
-    upload: (props) => <UploadNode {...props} />,
-    link: (props) => <LinkNode {...props} />,
-  });
+  const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => {
+    // 1. CONVERSORES ROBUSTOS: Substituímos nativos que sabemos que quebram na migração do WP
+    const migrationSafeConverters: any = {
+      ...defaultConverters,
+      list: ({ node, nodesToJSX }: any) => {
+        const children = nodesToJSX({ nodes: node.children, parent: node });
+        // Se a propriedade vier nula da migração, assumimos 'bullet' (ul) como padrão
+        if (node?.listType === "number") {
+          return (
+            <ol className="mb-4 list-decimal space-y-2 pl-6" start={node?.start || 1}>
+              {children}
+            </ol>
+          );
+        }
+        return <ul className="mb-4 list-disc space-y-2 pl-6">{children}</ul>;
+      },
+      listitem: ({ node, nodesToJSX }: any) => {
+        const children = nodesToJSX({ nodes: node.children, parent: node });
+        return <li value={node?.value}>{children}</li>;
+      },
+    };
+
+    // 2. VALIDADOR GERAL: Previne que falhas de importação causem tela azul no React
+    const safeConverters: any = {};
+    for (const key in migrationSafeConverters) {
+      const Converter = migrationSafeConverters[key];
+
+      if (typeof Converter === "function") {
+        safeConverters[key] = (props: any) => {
+          const result = Converter(props);
+
+          // O React aceita null, mas odeia undefined. Se a migração falhar, nós salvamos a tela.
+          if (result === undefined) {
+            console.warn(`⚠️ [Migração WP] Nó malformado ignorado para evitar crash: '${key}'`);
+
+            // Em dev, mostra o que falhou. Em produção, você pode trocar isso por "return null;"
+            return (
+              <span className="mx-1 inline-block rounded border border-yellow-300 bg-yellow-100 px-2 py-0.5 align-middle text-[10px] font-bold tracking-wider text-yellow-800 uppercase">
+                Ajustar Migração: {key}
+              </span>
+            );
+          }
+          return result;
+        };
+      } else {
+        safeConverters[key] = Converter;
+      }
+    }
+
+    // 3. Retornamos o objeto com nossos Blocos e Uploads normais
+    return {
+      ...safeConverters,
+      blocks: {
+        ...(safeConverters.blocks || {}),
+        youtubeEmbed: ({ node }: any) => <YouTubeEmbed {...node.fields} />,
+        spotifyEmbed: ({ node }: any) => <SpotifyEmbed {...node.fields} />,
+      },
+      upload: (props) => <UploadNode {...props} />,
+      link: (props) => <LinkNode {...props} />,
+      autolink: (props) => <LinkNode {...props} />,
+    };
+  };
 
   return <ConvertRichText converters={jsxConverters} data={data} />;
 }
