@@ -1,4 +1,5 @@
 import { withPayload } from "@payloadcms/next/withPayload";
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const ONE_DAY = 60 * 60 * 24;
@@ -122,4 +123,16 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPayload(nextConfig);
+export default withSentryConfig(withPayload(nextConfig), {
+  org: process.env.GLITCHTIP_ORG,
+  project: process.env.GLITCHTIP_PROJECT,
+  // OTIMIZAÇÃO DE TEMPO: Não processa node_modules (Build rápido)
+  widenClientFileUpload: false,
+  authToken: process.env.GLITCHTIP_AUTH_TOKEN,
+  sentryUrl: process.env.GLITCHTIP_URL,
+  sourcemaps: {
+    // OTIMIZAÇÃO DE ESPAÇO: Limpa os mapas do container após o upload
+    deleteSourcemapsAfterUpload: true,
+  },
+  telemetry: false,
+});

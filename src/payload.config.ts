@@ -4,6 +4,8 @@ import { fileURLToPath } from "url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 
+import * as Sentry from "@sentry/nextjs";
+
 import {
   BlockquoteFeature,
   BlocksFeature,
@@ -20,7 +22,7 @@ import {
   UnorderedListFeature,
   UploadFeature,
 } from "@payloadcms/richtext-lexical";
-import { buildConfig, TextFieldSingleValidation } from "payload";
+import { AfterErrorHookArgs, buildConfig, TextFieldSingleValidation } from "payload";
 
 import { pt } from "@payloadcms/translations/languages/pt";
 
@@ -129,6 +131,32 @@ export default buildConfig({
   }),
   collections: [Users, DailyViews, Posts, Media, Categories, Tags, LatBusExibithors, LatBusCategories],
   globals: [Topbar, SocialMediaSettings],
+  hooks: {
+    afterError: [
+      (args: AfterErrorHookArgs) => {
+        const { error, req, collection } = args;
+        // Enviamos o erro original (error) para o Sentry
+        Sentry.withScope((scope) => {
+          scope.setTag("payload_collection", collection?.slug || "global");
+
+          if (req?.user) {
+            scope.setUser({
+              email: req.user.email,
+              id: req.user.id,
+            });
+          }
+
+          // Contexto extra para ajudar no debug
+          scope.setContext("payload_request", {
+            url: req?.url,
+            method: req?.method,
+          });
+
+          Sentry.captureException(error);
+        });
+      },
+    ],
+  },
   secret: process.env.PAYLOAD_SECRET || "",
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || "" },
